@@ -35,16 +35,19 @@ import com.jme3.app.SimpleApplication;
 import com.jme3.bounding.BoundingBox;
 import com.jme3.bullet.BulletAppState;
 import com.jme3.bullet.PhysicsSpace;
+import com.jme3.bullet.collision.PhysicsCollisionObject;
 import com.jme3.bullet.collision.shapes.CollisionShape;
 import com.jme3.bullet.control.VehicleControl;
 import com.jme3.bullet.objects.VehicleWheel;
 import com.jme3.bullet.util.CollisionShapeFactory;
+import com.jme3.input.ChaseCamera;
 import com.jme3.input.KeyInput;
 import com.jme3.input.controls.ActionListener;
 import com.jme3.input.controls.KeyTrigger;
 import com.jme3.light.DirectionalLight;
 import com.jme3.math.FastMath;
 import com.jme3.math.Matrix3f;
+import com.jme3.math.Quaternion;
 import com.jme3.math.Vector3f;
 import com.jme3.renderer.queue.RenderQueue.ShadowMode;
 import com.jme3.scene.Geometry;
@@ -61,7 +64,8 @@ public class TestFancyCar extends SimpleApplication implements ActionListener {
     private float wheelRadius;
     private float steeringValue = 0;
     private float accelerationValue = 0;
-    private Node carNode;
+    private Spatial spaceCraft;
+    private PhysicsHoverControl hoverControl;
 
     public static void main(String[] args) {
         TestFancyCar app = new TestFancyCar();
@@ -156,110 +160,98 @@ public class TestFancyCar extends SimpleApplication implements ActionListener {
         float compValue = 0.2f; //(lower than damp!)
         float dampValue = 0.3f;
         final float mass = 400;
+        
+        spaceCraft = assetManager.loadModel("Models/HoverTank/Tank2.mesh.xml");
+        CollisionShape colShape = CollisionShapeFactory.createDynamicMeshShape(spaceCraft);
+        spaceCraft.setShadowMode(ShadowMode.CastAndReceive);
+        spaceCraft.setLocalTranslation(new Vector3f(-60, 14, -23));
+        spaceCraft.setLocalRotation(new Quaternion(new float[]{0, 0.01f, 0}));
 
-        //Load model and get chassis Geometry
-        carNode = (Node)assetManager.loadModel("Models/Ferrari/Car.scene");
-        carNode.setShadowMode(ShadowMode.Cast);
-        Geometry chasis = findGeom(carNode, "Car");
-        BoundingBox box = (BoundingBox) chasis.getModelBound();
+        hoverControl = new PhysicsHoverControl(colShape, 500);
+        hoverControl.setCollisionGroup(PhysicsCollisionObject.COLLISION_GROUP_02);
 
-        //Create a hull collision shape for the chassis
-        CollisionShape carHull = CollisionShapeFactory.createDynamicMeshShape(chasis);
+        spaceCraft.addControl(hoverControl);
 
-        //Create a vehicle control
-        player = new VehicleControl(carHull, mass);
-        carNode.addControl(player);
+        rootNode.attachChild(spaceCraft);
+        getPhysicsSpace().add(hoverControl);
 
-        //Setting default values for wheels
-        player.setSuspensionCompression(compValue * 2.0f * FastMath.sqrt(stiffness));
-        player.setSuspensionDamping(dampValue * 2.0f * FastMath.sqrt(stiffness));
-        player.setSuspensionStiffness(stiffness);
-        player.setMaxSuspensionForce(10000);
+        ChaseCamera chaseCam = new ChaseCamera(cam, inputManager);
+        spaceCraft.addControl(chaseCam);
 
-        //Create four wheels and add them at their locations
-        //note that our fancy car actually goes backwards..
-        Vector3f wheelDirection = new Vector3f(0, -1, 0);
-        Vector3f wheelAxle = new Vector3f(-1, 0, 0);
-
-        Geometry wheel_fr = findGeom(carNode, "WheelFrontRight");
-        wheel_fr.center();
-        box = (BoundingBox) wheel_fr.getModelBound();
-        wheelRadius = box.getYExtent();
-        float back_wheel_h = (wheelRadius * 1.7f) - 1f;
-        float front_wheel_h = (wheelRadius * 1.9f) - 1f;
-        player.addWheel(wheel_fr.getParent(), box.getCenter().add(0, -front_wheel_h, 0),
-                wheelDirection, wheelAxle, 0.2f, wheelRadius, true);
-
-        Geometry wheel_fl = findGeom(carNode, "WheelFrontLeft");
-        wheel_fl.center();
-        box = (BoundingBox) wheel_fl.getModelBound();
-        player.addWheel(wheel_fl.getParent(), box.getCenter().add(0, -front_wheel_h, 0),
-                wheelDirection, wheelAxle, 0.2f, wheelRadius, true);
-
-        Geometry wheel_br = findGeom(carNode, "WheelBackRight");
-        wheel_br.center();
-        box = (BoundingBox) wheel_br.getModelBound();
-        player.addWheel(wheel_br.getParent(), box.getCenter().add(0, -back_wheel_h, 0),
-                wheelDirection, wheelAxle, 0.2f, wheelRadius, false);
-
-        Geometry wheel_bl = findGeom(carNode, "WheelBackLeft");
-        wheel_bl.center();
-        box = (BoundingBox) wheel_bl.getModelBound();
-        player.addWheel(wheel_bl.getParent(), box.getCenter().add(0, -back_wheel_h, 0),
-                wheelDirection, wheelAxle, 0.2f, wheelRadius, false);
-
-        player.getWheel(2).setFrictionSlip(4);
-        player.getWheel(3).setFrictionSlip(4);
-
-        rootNode.attachChild(carNode);
-        getPhysicsSpace().add(player);
+        flyCam.setEnabled(false);
     }
 
     public void onAction(String binding, boolean value, float tpf) {
-        if (binding.equals("Lefts")) {
-            if (value) {
-                steeringValue += .5f;
-            } else {
-                steeringValue += -.5f;
-            }
-            player.steer(steeringValue);
-        } else if (binding.equals("Rights")) {
-            if (value) {
-                steeringValue += -.5f;
-            } else {
-                steeringValue += .5f;
-            }
-            player.steer(steeringValue);
-        } //note that our fancy car actually goes backwards..
-        else if (binding.equals("Ups")) {
-            if (value) {
-                accelerationValue -= 800;
-            } else {
-                accelerationValue += 800;
-            }
-            player.accelerate(accelerationValue);
-            player.setCollisionShape(CollisionShapeFactory.createDynamicMeshShape(findGeom(carNode, "Car")));
-        } else if (binding.equals("Downs")) {
-            if (value) {
-                player.brake(40f);
-            } else {
-                player.brake(0f);
-            }
-        } else if (binding.equals("Reset")) {
-            if (value) {
-                System.out.println("Reset");
-                player.setPhysicsLocation(Vector3f.ZERO);
-                player.setPhysicsRotation(new Matrix3f());
-                player.setLinearVelocity(Vector3f.ZERO);
-                player.setAngularVelocity(Vector3f.ZERO);
-                player.resetSuspension();
-            } else {
-            }
-        }
+//        if (binding.equals("Lefts")) {
+//            if (value) {
+//                steeringValue += .5f;
+//            } else {
+//                steeringValue += -.5f;
+//            }
+//            player.steer(steeringValue);
+//        } else if (binding.equals("Rights")) {
+//            if (value) {
+//                steeringValue += -.5f;
+//            } else {
+//                steeringValue += .5f;
+//            }
+//            player.steer(steeringValue);
+//        } //note that our fancy car actually goes backwards..
+//        else if (binding.equals("Ups")) {
+//            if (value) {
+//                accelerationValue -= 800;
+//            } else {
+//                accelerationValue += 800;
+//            }
+//            player.accelerate(accelerationValue);
+//            //player.setCollisionShape(CollisionShapeFactory.createDynamicMeshShape(carNode));
+//        } else if (binding.equals("Downs")) {
+//            if (value) {
+//                player.brake(40f);
+//            } else {
+//                player.brake(0f);
+//            }
+//        } else if (binding.equals("Reset")) {
+//            if (value) {
+//                System.out.println("Reset");
+//                player.setPhysicsLocation(Vector3f.ZERO);
+//                player.setPhysicsRotation(new Matrix3f());
+//                player.setLinearVelocity(Vector3f.ZERO);
+//                player.setAngularVelocity(Vector3f.ZERO);
+//                player.resetSuspension();
+//            } else {
+//            }
+//        }
     }
 
+    public void updateCamera() {
+        rootNode.updateGeometricState();
+
+        Vector3f pos = spaceCraft.getWorldTranslation().clone();
+        Quaternion rot = spaceCraft.getWorldRotation();
+        Vector3f dir = rot.getRotationColumn(2);
+
+        // make it XZ only
+        Vector3f camPos = new Vector3f(dir);
+        camPos.setY(0);
+        camPos.normalizeLocal();
+
+        // negate and multiply by distance from object
+        camPos.negateLocal();
+        camPos.multLocal(15);
+
+        // add Y distance
+        camPos.setY(2);
+        camPos.addLocal(pos);
+        cam.setLocation(camPos);
+
+        Vector3f lookAt = new Vector3f(dir);
+        lookAt.multLocal(7); // look at dist
+        lookAt.addLocal(pos);
+        cam.lookAt(lookAt, Vector3f.UNIT_Y);
+    }
     @Override
     public void simpleUpdate(float tpf) {
-        cam.lookAt(carNode.getWorldTranslation(), Vector3f.UNIT_Y);
+        updateCamera();
     }
 }
