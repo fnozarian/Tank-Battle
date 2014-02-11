@@ -73,10 +73,10 @@ public class TestFancyCar extends SimpleApplication implements ActionListener {
     }
 
     private void setupKeys() {
-        inputManager.addMapping("Lefts", new KeyTrigger(KeyInput.KEY_H));
-        inputManager.addMapping("Rights", new KeyTrigger(KeyInput.KEY_K));
-        inputManager.addMapping("Ups", new KeyTrigger(KeyInput.KEY_U));
-        inputManager.addMapping("Downs", new KeyTrigger(KeyInput.KEY_J));
+        inputManager.addMapping("Lefts", new KeyTrigger(KeyInput.KEY_A));
+        inputManager.addMapping("Rights", new KeyTrigger(KeyInput.KEY_D));
+        inputManager.addMapping("Ups", new KeyTrigger(KeyInput.KEY_W));
+        inputManager.addMapping("Downs", new KeyTrigger(KeyInput.KEY_S));
         inputManager.addMapping("Space", new KeyTrigger(KeyInput.KEY_SPACE));
         inputManager.addMapping("Reset", new KeyTrigger(KeyInput.KEY_RETURN));
         inputManager.addListener(this, "Lefts");
@@ -180,8 +180,27 @@ public class TestFancyCar extends SimpleApplication implements ActionListener {
 
         flyCam.setEnabled(false);
     }
-
+    
     public void onAction(String binding, boolean value, float tpf) {
+        if (binding.equals("Lefts")) {
+            hoverControl.steer(value ? 50f : 0);
+        } else if (binding.equals("Rights")) {
+            hoverControl.steer(value ? -50f : 0);
+        } else if (binding.equals("Ups")) {
+            hoverControl.accelerate(value ? 100f : 0);
+        } else if (binding.equals("Downs")) {
+            hoverControl.accelerate(value ? -100f : 0);
+        } else if (binding.equals("Reset")) {
+            if (value) {
+                System.out.println("Reset");
+                hoverControl.setPhysicsLocation(new Vector3f(-140, 14, -23));
+                hoverControl.setPhysicsRotation(new Matrix3f());
+                hoverControl.clearForces();
+            } else {
+            }
+        } else if (binding.equals("Space") && value) {
+            //makeMissile();
+        }
 //        if (binding.equals("Lefts")) {
 //            if (value) {
 //                steeringValue += .5f;
