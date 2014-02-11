@@ -50,9 +50,11 @@ import com.jme3.math.Matrix3f;
 import com.jme3.math.Quaternion;
 import com.jme3.math.Vector3f;
 import com.jme3.renderer.queue.RenderQueue.ShadowMode;
+import com.jme3.scene.CameraNode;
 import com.jme3.scene.Geometry;
 import com.jme3.scene.Node;
 import com.jme3.scene.Spatial;
+import com.jme3.scene.control.CameraControl;
 import com.jme3.shadow.BasicShadowRenderer;
 
 public class TestFancyCar extends SimpleApplication implements ActionListener {
@@ -66,7 +68,7 @@ public class TestFancyCar extends SimpleApplication implements ActionListener {
     private float accelerationValue = 0;
     private Spatial spaceCraft;
     private PhysicsHoverControl hoverControl;
-
+    
     public static void main(String[] args) {
         TestFancyCar app = new TestFancyCar();
         app.start();
@@ -171,13 +173,18 @@ public class TestFancyCar extends SimpleApplication implements ActionListener {
         hoverControl.setCollisionGroup(PhysicsCollisionObject.COLLISION_GROUP_02);
 
         spaceCraft.addControl(hoverControl);
-
-        rootNode.attachChild(spaceCraft);
+        
+        CameraNode camNode = new CameraNode("camNode",cam);
+        //Setting the direction to Spatial to camera, this means the camera will copy the movements of the Node
+        camNode.setControlDir(CameraControl.ControlDirection.SpatialToCamera);
+        camNode.setLocalTranslation(0f, 4f, -12f);
+        Node spaceCraftNode = (Node)spaceCraft;
+        spaceCraftNode.attachChild(camNode);
+        rootNode.attachChild(spaceCraftNode);
         getPhysicsSpace().add(hoverControl);
-
-        ChaseCamera chaseCam = new ChaseCamera(cam, inputManager);
-        spaceCraft.addControl(chaseCam);
-
+        
+        //ChaseCamera chaseCam = new ChaseCamera(cam, inputManager);
+        //spaceCraft.addControl(chaseCam);
         flyCam.setEnabled(false);
     }
     
@@ -201,76 +208,36 @@ public class TestFancyCar extends SimpleApplication implements ActionListener {
         } else if (binding.equals("Space") && value) {
             //makeMissile();
         }
-//        if (binding.equals("Lefts")) {
-//            if (value) {
-//                steeringValue += .5f;
-//            } else {
-//                steeringValue += -.5f;
-//            }
-//            player.steer(steeringValue);
-//        } else if (binding.equals("Rights")) {
-//            if (value) {
-//                steeringValue += -.5f;
-//            } else {
-//                steeringValue += .5f;
-//            }
-//            player.steer(steeringValue);
-//        } //note that our fancy car actually goes backwards..
-//        else if (binding.equals("Ups")) {
-//            if (value) {
-//                accelerationValue -= 800;
-//            } else {
-//                accelerationValue += 800;
-//            }
-//            player.accelerate(accelerationValue);
-//            //player.setCollisionShape(CollisionShapeFactory.createDynamicMeshShape(carNode));
-//        } else if (binding.equals("Downs")) {
-//            if (value) {
-//                player.brake(40f);
-//            } else {
-//                player.brake(0f);
-//            }
-//        } else if (binding.equals("Reset")) {
-//            if (value) {
-//                System.out.println("Reset");
-//                player.setPhysicsLocation(Vector3f.ZERO);
-//                player.setPhysicsRotation(new Matrix3f());
-//                player.setLinearVelocity(Vector3f.ZERO);
-//                player.setAngularVelocity(Vector3f.ZERO);
-//                player.resetSuspension();
-//            } else {
-//            }
-//        }
     }
 
-    public void updateCamera() {
-        rootNode.updateGeometricState();
-
-        Vector3f pos = spaceCraft.getWorldTranslation().clone();
-        Quaternion rot = spaceCraft.getWorldRotation();
-        Vector3f dir = rot.getRotationColumn(2);
-
-        // make it XZ only
-        Vector3f camPos = new Vector3f(dir);
-        camPos.setY(0);
-        camPos.normalizeLocal();
-
-        // negate and multiply by distance from object
-        camPos.negateLocal();
-        camPos.multLocal(15);
-
-        // add Y distance
-        camPos.setY(2);
-        camPos.addLocal(pos);
-        cam.setLocation(camPos);
-
-        Vector3f lookAt = new Vector3f(dir);
-        lookAt.multLocal(7); // look at dist
-        lookAt.addLocal(pos);
-        cam.lookAt(lookAt, Vector3f.UNIT_Y);
-    }
+//    public void updateCamera() {     
+//        rootNode.updateGeometricState();
+//
+//        Vector3f pos = spaceCraft.getWorldTranslation().clone();
+//        Quaternion rot = spaceCraft.getWorldRotation();
+//        Vector3f dir = rot.getRotationColumn(2);
+//
+//        // make it XZ only
+//        Vector3f camPos = new Vector3f(dir);
+//        camPos.setY(0);
+//        camPos.normalizeLocal();
+//
+//        // negate and multiply by distance from object
+//        camPos.negateLocal();
+//        camPos.multLocal(15);
+//
+//        // add Y distance
+//        camPos.setY(2);
+//        camPos.addLocal(pos);
+//        cam.setLocation(camPos);
+//
+//        Vector3f lookAt = new Vector3f(dir);
+//        lookAt.multLocal(7); // look at dist
+//        lookAt.addLocal(pos);
+//        cam.lookAt(lookAt, Vector3f.UNIT_Y);
+//    }
     @Override
     public void simpleUpdate(float tpf) {
-        updateCamera();
+        //updateCamera();
     }
 }
