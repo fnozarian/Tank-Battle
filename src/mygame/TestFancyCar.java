@@ -32,6 +32,7 @@
 package mygame;
 
 import com.jme3.app.SimpleApplication;
+import com.jme3.audio.AudioNode;
 import com.jme3.bounding.BoundingBox;
 import com.jme3.bullet.BulletAppState;
 import com.jme3.bullet.PhysicsSpace;
@@ -68,7 +69,7 @@ public class TestFancyCar extends SimpleApplication implements ActionListener {
     private float accelerationValue = 0;
     private Spatial spaceCraft;
     private PhysicsHoverControl hoverControl;
-    
+    private AudioNode tankIdleSound;
     public static void main(String[] args) {
         TestFancyCar app = new TestFancyCar();
         app.start();
@@ -171,7 +172,6 @@ public class TestFancyCar extends SimpleApplication implements ActionListener {
 
         hoverControl = new PhysicsHoverControl(colShape, 500);
         hoverControl.setCollisionGroup(PhysicsCollisionObject.COLLISION_GROUP_02);
-
         spaceCraft.addControl(hoverControl);
         
         CameraNode camNode = new CameraNode("camNode",cam);
@@ -180,11 +180,15 @@ public class TestFancyCar extends SimpleApplication implements ActionListener {
         camNode.setLocalTranslation(0f, 4f, -12f);
         Node spaceCraftNode = (Node)spaceCraft;
         spaceCraftNode.attachChild(camNode);
+        
+        tankIdleSound = new AudioNode(assetManager, "Sounds/propeller-plane-idle.wav", false);        
+        tankIdleSound.setLooping(true);
+        spaceCraftNode.attachChild(tankIdleSound);
+        tankIdleSound.play();
+        
         rootNode.attachChild(spaceCraftNode);
         getPhysicsSpace().add(hoverControl);
         
-        //ChaseCamera chaseCam = new ChaseCamera(cam, inputManager);
-        //spaceCraft.addControl(chaseCam);
         flyCam.setEnabled(false);
     }
     
