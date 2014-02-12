@@ -213,7 +213,10 @@ public class TestFancyCar extends SimpleApplication implements ActionListener {
         tankIdleSound.setLooping(true);
         spaceCraftNode.attachChild(tankIdleSound);
         tankIdleSound.play();
-
+        
+        weaponSound1 = new AudioNode(assetManager,"Sounds/weapon1.wav",false);
+        spaceCraftNode.attachChild(weaponSound1);
+        
         rootNode.attachChild(spaceCraftNode);
         getPhysicsSpace().add(hoverControl);
 
@@ -254,6 +257,8 @@ public class TestFancyCar extends SimpleApplication implements ActionListener {
         bulletg.addControl(bulletNode);
         rootNode.attachChild(bulletg);
         getPhysicsSpace().add(bulletNode);
+        
+        weaponSound1.play();
     }
     
     public void initMaterial() {
