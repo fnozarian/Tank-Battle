@@ -32,20 +32,25 @@
 package mygame;
 
 import com.jme3.app.SimpleApplication;
+import com.jme3.asset.TextureKey;
 import com.jme3.audio.AudioNode;
 import com.jme3.bounding.BoundingBox;
 import com.jme3.bullet.BulletAppState;
 import com.jme3.bullet.PhysicsSpace;
 import com.jme3.bullet.collision.PhysicsCollisionObject;
 import com.jme3.bullet.collision.shapes.CollisionShape;
+import com.jme3.bullet.collision.shapes.SphereCollisionShape;
+import com.jme3.bullet.control.RigidBodyControl;
 import com.jme3.bullet.control.VehicleControl;
 import com.jme3.bullet.objects.VehicleWheel;
 import com.jme3.bullet.util.CollisionShapeFactory;
+import com.jme3.font.BitmapText;
 import com.jme3.input.ChaseCamera;
 import com.jme3.input.KeyInput;
 import com.jme3.input.controls.ActionListener;
 import com.jme3.input.controls.KeyTrigger;
 import com.jme3.light.DirectionalLight;
+import com.jme3.material.Material;
 import com.jme3.math.FastMath;
 import com.jme3.math.Matrix3f;
 import com.jme3.math.Quaternion;
@@ -56,7 +61,9 @@ import com.jme3.scene.Geometry;
 import com.jme3.scene.Node;
 import com.jme3.scene.Spatial;
 import com.jme3.scene.control.CameraControl;
+import com.jme3.scene.shape.Sphere;
 import com.jme3.shadow.BasicShadowRenderer;
+import com.jme3.texture.Texture;
 
 public class TestFancyCar extends SimpleApplication implements ActionListener {
 
@@ -70,10 +77,17 @@ public class TestFancyCar extends SimpleApplication implements ActionListener {
     private Spatial spaceCraft;
     private PhysicsHoverControl hoverControl;
     private AudioNode tankIdleSound;
+    private AudioNode weaponSound1;
+    private static Sphere bullet;
+    private static SphereCollisionShape bulletCollisionShape;
+    private Material mat2;
+    private CameraNode camNode;
+    
     public static void main(String[] args) {
         TestFancyCar app = new TestFancyCar();
         app.start();
     }
+    private BasicShadowRenderer bsr;
 
     private void setupKeys() {
         inputManager.addMapping("Lefts", new KeyTrigger(KeyInput.KEY_A));
@@ -92,14 +106,29 @@ public class TestFancyCar extends SimpleApplication implements ActionListener {
 
     @Override
     public void simpleInitApp() {
+        
         bulletAppState = new BulletAppState();
+        bulletAppState.setThreadingType(BulletAppState.ThreadingType.PARALLEL);
         stateManager.attach(bulletAppState);
-//        bulletAppState.getPhysicsSpace().enableDebug(assetManager);
-        if (settings.getRenderer().startsWith("LWJGL")) {
-            BasicShadowRenderer bsr = new BasicShadowRenderer(assetManager, 512);
-            bsr.setDirection(new Vector3f(-0.5f, -0.3f, -0.3f).normalizeLocal());
-            viewPort.addProcessor(bsr);
-        }
+        
+        bullet = new Sphere(32, 32, 0.4f, true, false);
+        bullet.setTextureMode(Sphere.TextureMode.Projected);
+        bulletCollisionShape = new SphereCollisionShape(0.4f);
+        
+        initMaterial();
+        initCrossHairs();
+
+        //What are these?!
+        rootNode.setShadowMode(ShadowMode.Off);
+        bsr = new BasicShadowRenderer(assetManager, 256);
+        bsr.setDirection(new Vector3f(-1, -1, -1).normalizeLocal());
+        viewPort.addProcessor(bsr);
+        
+//        if (settings.getRenderer().startsWith("LWJGL")) {
+//            BasicShadowRenderer bsr = new BasicShadowRenderer(assetManager, 512);
+//            bsr.setDirection(new Vector3f(-0.5f, -0.3f, -0.3f).normalizeLocal());
+//            viewPort.addProcessor(bsr);
+//        }
         cam.setFrustumFar(150f);
         flyCam.setMoveSpeed(10);
 
@@ -139,7 +168,6 @@ public class TestFancyCar extends SimpleApplication implements ActionListener {
 //        rootNode.attachChild(tb);
 //        getPhysicsSpace().add(tb);
 //    }
-
     private Geometry findGeom(Spatial spatial, String name) {
         if (spatial instanceof Node) {
             Node node = (Node) spatial;
@@ -163,7 +191,7 @@ public class TestFancyCar extends SimpleApplication implements ActionListener {
         float compValue = 0.2f; //(lower than damp!)
         float dampValue = 0.3f;
         final float mass = 400;
-        
+
         spaceCraft = assetManager.loadModel("Models/HoverTank/Tank2.mesh.xml");
         CollisionShape colShape = CollisionShapeFactory.createDynamicMeshShape(spaceCraft);
         spaceCraft.setShadowMode(ShadowMode.CastAndReceive);
@@ -173,25 +201,25 @@ public class TestFancyCar extends SimpleApplication implements ActionListener {
         hoverControl = new PhysicsHoverControl(colShape, 500);
         hoverControl.setCollisionGroup(PhysicsCollisionObject.COLLISION_GROUP_02);
         spaceCraft.addControl(hoverControl);
-        
-        CameraNode camNode = new CameraNode("camNode",cam);
+
+        camNode = new CameraNode("camNode", cam);
         //Setting the direction to Spatial to camera, this means the camera will copy the movements of the Node
         camNode.setControlDir(CameraControl.ControlDirection.SpatialToCamera);
         camNode.setLocalTranslation(0f, 4f, -12f);
-        Node spaceCraftNode = (Node)spaceCraft;
+        Node spaceCraftNode = (Node) spaceCraft;
         spaceCraftNode.attachChild(camNode);
-        
-        tankIdleSound = new AudioNode(assetManager, "Sounds/propeller-plane-idle.wav", false);        
+
+        tankIdleSound = new AudioNode(assetManager, "Sounds/propeller-plane-idle.wav", false);
         tankIdleSound.setLooping(true);
         spaceCraftNode.attachChild(tankIdleSound);
         tankIdleSound.play();
-        
+
         rootNode.attachChild(spaceCraftNode);
         getPhysicsSpace().add(hoverControl);
-        
+
         flyCam.setEnabled(false);
     }
-    
+
     public void onAction(String binding, boolean value, float tpf) {
         if (binding.equals("Lefts")) {
             hoverControl.steer(value ? 50f : 0);
@@ -210,38 +238,44 @@ public class TestFancyCar extends SimpleApplication implements ActionListener {
             } else {
             }
         } else if (binding.equals("Space") && value) {
-            //makeMissile();
+            makeMissile();
         }
     }
 
-//    public void updateCamera() {     
-//        rootNode.updateGeometricState();
-//
-//        Vector3f pos = spaceCraft.getWorldTranslation().clone();
-//        Quaternion rot = spaceCraft.getWorldRotation();
-//        Vector3f dir = rot.getRotationColumn(2);
-//
-//        // make it XZ only
-//        Vector3f camPos = new Vector3f(dir);
-//        camPos.setY(0);
-//        camPos.normalizeLocal();
-//
-//        // negate and multiply by distance from object
-//        camPos.negateLocal();
-//        camPos.multLocal(15);
-//
-//        // add Y distance
-//        camPos.setY(2);
-//        camPos.addLocal(pos);
-//        cam.setLocation(camPos);
-//
-//        Vector3f lookAt = new Vector3f(dir);
-//        lookAt.multLocal(7); // look at dist
-//        lookAt.addLocal(pos);
-//        cam.lookAt(lookAt, Vector3f.UNIT_Y);
-//    }
+    private void makeMissile() {
+        Geometry bulletg = new Geometry("bullet", bullet);
+        bulletg.setMaterial(mat2);
+        bulletg.setShadowMode(ShadowMode.CastAndReceive);
+        bulletg.setLocalTranslation(camNode.getCamera().getLocation());
+
+        SphereCollisionShape bulletCollisionShape = new SphereCollisionShape(0.4f);
+        RigidBodyControl bulletNode = new BombControl(assetManager, bulletCollisionShape, 0.001f);
+        bulletNode.setLinearVelocity(camNode.getCamera().getDirection().mult(25));
+        bulletg.addControl(bulletNode);
+        rootNode.attachChild(bulletg);
+        getPhysicsSpace().add(bulletNode);
+    }
+    
+    public void initMaterial() {
+        mat2 = new Material(assetManager, "Common/MatDefs/Misc/Unshaded.j3md");
+        TextureKey key2 = new TextureKey("Textures/Terrain/Rock/Rock.PNG");
+        key2.setGenerateMips(true);
+        Texture tex2 = assetManager.loadTexture(key2);
+        mat2.setTexture("ColorMap", tex2);
+    }
+
+    protected void initCrossHairs() {
+        guiFont = assetManager.loadFont("Interface/Fonts/Default.fnt");
+        BitmapText ch = new BitmapText(guiFont, false);
+        ch.setSize(guiFont.getCharSet().getRenderedSize() * 2);
+        ch.setText("+"); // crosshairs
+        ch.setLocalTranslation( // center
+                settings.getWidth() / 2 - guiFont.getCharSet().getRenderedSize() / 3 * 2,
+                settings.getHeight() / 2 + ch.getLineHeight() / 2, 0);
+        guiNode.attachChild(ch);
+    }
+
     @Override
     public void simpleUpdate(float tpf) {
-        //updateCamera();
     }
 }
