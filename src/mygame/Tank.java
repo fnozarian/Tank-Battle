@@ -1,12 +1,8 @@
 package mygame;
 
 import java.util.ArrayList;
-
-
 import com.jme3.audio.AudioNode;
 import com.jme3.bullet.collision.PhysicsCollisionObject;
-import com.jme3.bullet.collision.shapes.MeshCollisionShape;
-import com.jme3.bullet.control.VehicleControl;
 import com.jme3.bullet.util.CollisionShapeFactory;
 import com.jme3.math.Quaternion;
 import com.jme3.math.Vector3f;
@@ -14,7 +10,6 @@ import com.jme3.renderer.queue.RenderQueue;
 import com.jme3.scene.CameraNode;
 import com.jme3.scene.Geometry;
 import com.jme3.scene.Node;
-import com.jme3.scene.Spatial;
 import com.jme3.scene.control.CameraControl;
 import com.jme3.bullet.collision.shapes.CollisionShape;
 import com.jme3.renderer.Camera;
@@ -28,10 +23,12 @@ public class Tank {
     private final float brakeForce = 100.0f;
     private float steeringValue = 0;
     private float accelerationValue = 0;
+    
     private float compValue = 0.2f; //(lower than damp!)
     private float dampValue = 0.3f;
     private final float mass = 400;
     float stiffness = 120.0f;//200=f1 car
+
     private ArrayList<Weapon> Weapons;
     private Weapon activeWeapon;
     private int health;
@@ -49,7 +46,6 @@ public class Tank {
         this.assetManager = assetManager;
         
         //Configuring Model
-        //tankModel = assetManager.loadModel("Models/HoverTank/Tank2.mesh.xml");
         tankBody = (Geometry)assetManager.loadModel("Models/HoverTank/Tank2.mesh.xml");
         colShape = CollisionShapeFactory.createDynamicMeshShape(tankBody);
         tankBody.setShadowMode(RenderQueue.ShadowMode.CastAndReceive);
@@ -76,7 +72,6 @@ public class Tank {
         
         //Setting Default Weapon
         tankNode.attachChild(activeWeapon.getWeaponNode());
-        
         
     }
 

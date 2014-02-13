@@ -34,39 +34,31 @@ package mygame;
 import com.jme3.app.SimpleApplication;
 import com.jme3.asset.TextureKey;
 import com.jme3.audio.AudioNode;
-import com.jme3.bounding.BoundingBox;
 import com.jme3.bullet.BulletAppState;
 import com.jme3.bullet.PhysicsSpace;
-import com.jme3.bullet.collision.PhysicsCollisionObject;
-import com.jme3.bullet.collision.shapes.CollisionShape;
 import com.jme3.bullet.collision.shapes.SphereCollisionShape;
 import com.jme3.bullet.control.RigidBodyControl;
 import com.jme3.bullet.control.VehicleControl;
 import com.jme3.bullet.objects.VehicleWheel;
-import com.jme3.bullet.util.CollisionShapeFactory;
-import com.jme3.font.BitmapText;
-import com.jme3.input.ChaseCamera;
-import com.jme3.input.KeyInput;
-import com.jme3.input.controls.ActionListener;
-import com.jme3.input.controls.KeyTrigger;
 import com.jme3.light.DirectionalLight;
 import com.jme3.material.Material;
-import com.jme3.math.FastMath;
-import com.jme3.math.Matrix3f;
-import com.jme3.math.Quaternion;
 import com.jme3.math.Vector3f;
 import com.jme3.renderer.queue.RenderQueue.ShadowMode;
 import com.jme3.scene.CameraNode;
 import com.jme3.scene.Geometry;
 import com.jme3.scene.Node;
 import com.jme3.scene.Spatial;
-import com.jme3.scene.control.CameraControl;
 import com.jme3.scene.shape.Sphere;
 import com.jme3.shadow.BasicShadowRenderer;
 import com.jme3.texture.Texture;
+import com.jme3.app.state.AbstractAppState;
+import com.jme3.font.BitmapFont;
 
-public class TestFancyCar extends SimpleApplication implements ActionListener {
+public class TestFancyCar extends SimpleApplication {
 
+    private AbstractAppState inGameState;
+    private AbstractAppState mainScreenState;
+    
     private BulletAppState bulletAppState;
     private VehicleControl player;
     private VehicleWheel fr, fl, br, bl;
@@ -89,23 +81,16 @@ public class TestFancyCar extends SimpleApplication implements ActionListener {
     }
     private BasicShadowRenderer bsr;
 
-    private void setupKeys() {
-        inputManager.addMapping("Lefts", new KeyTrigger(KeyInput.KEY_A));
-        inputManager.addMapping("Rights", new KeyTrigger(KeyInput.KEY_D));
-        inputManager.addMapping("Ups", new KeyTrigger(KeyInput.KEY_W));
-        inputManager.addMapping("Downs", new KeyTrigger(KeyInput.KEY_S));
-        inputManager.addMapping("Space", new KeyTrigger(KeyInput.KEY_SPACE));
-        inputManager.addMapping("Reset", new KeyTrigger(KeyInput.KEY_RETURN));
-        inputManager.addListener(this, "Lefts");
-        inputManager.addListener(this, "Rights");
-        inputManager.addListener(this, "Ups");
-        inputManager.addListener(this, "Downs");
-        inputManager.addListener(this, "Space");
-        inputManager.addListener(this, "Reset");
-    }
 
     @Override
     public void simpleInitApp() {
+       
+        //Configuring Game States
+        inGameState = new InGameState();
+        mainScreenState = new MainScreenState();
+        mainScreenState.setEnabled(false);//we jump into game at first in debug level
+        stateManager.attach(inGameState);
+        stateManager.attach(mainScreenState);
         
         bulletAppState = new BulletAppState();
         bulletAppState.setThreadingType(BulletAppState.ThreadingType.PARALLEL);
@@ -116,7 +101,6 @@ public class TestFancyCar extends SimpleApplication implements ActionListener {
         bulletCollisionShape = new SphereCollisionShape(0.4f);
         
         initMaterial();
-        initCrossHairs();
 
         //What are these?!
         rootNode.setShadowMode(ShadowMode.Off);
@@ -132,10 +116,7 @@ public class TestFancyCar extends SimpleApplication implements ActionListener {
         cam.setFrustumFar(150f);
         flyCam.setMoveSpeed(10);
 
-        setupKeys();
         PhysicsTestHelper.createPhysicsTestWorld(rootNode, assetManager, bulletAppState.getPhysicsSpace());
-//      setupFloor();
-        buildPlayer();
 
         DirectionalLight dl = new DirectionalLight();
         dl.setDirection(new Vector3f(-0.5f, -1f, -0.3f).normalizeLocal());
@@ -144,76 +125,16 @@ public class TestFancyCar extends SimpleApplication implements ActionListener {
         dl = new DirectionalLight();
         dl.setDirection(new Vector3f(0.5f, -0.1f, 0.3f).normalizeLocal());
         rootNode.addLight(dl);
-        
+       
         
         rootNode.attachChild(spaceCraftNode);
         getPhysicsSpace().add(vehicleControl);
         flyCam.setEnabled(false);
         
-        
-        
     }
 
     private PhysicsSpace getPhysicsSpace() {
         return bulletAppState.getPhysicsSpace();
-    }
-
-//    public void setupFloor() {
-//        Material mat = assetManager.loadMaterial("Textures/Terrain/BrickWall/BrickWall.j3m");
-//        mat.getTextureParam("DiffuseMap").getTextureValue().setWrap(WrapMode.Repeat);
-////        mat.getTextureParam("NormalMap").getTextureValue().setWrap(WrapMode.Repeat);
-////        mat.getTextureParam("ParallaxMap").getTextureValue().setWrap(WrapMode.Repeat);
-//
-//        Box floor = new Box(Vector3f.ZERO, 140, 1f, 140);
-//        floor.scaleTextureCoordinates(new Vector2f(112.0f, 112.0f));
-//        Geometry floorGeom = new Geometry("Floor", floor);
-//        floorGeom.setShadowMode(ShadowMode.Receive);
-//        floorGeom.setMaterial(mat);
-//
-//        PhysicsNode tb = new PhysicsNode(floorGeom, new MeshCollisionShape(floorGeom.getMesh()), 0);
-//        tb.setLocalTranslation(new Vector3f(0f, -6, 0f));
-////        tb.attachDebugShape(assetManager);
-//        rootNode.attachChild(tb);
-//        getPhysicsSpace().add(tb);
-//    }
-//    private Geometry findGeom(Spatial spatial, String name) {
-//        if (spatial instanceof Node) {
-//            Node node = (Node) spatial;
-//            for (int i = 0; i < node.getQuantity(); i++) {
-//                Spatial child = node.getChild(i);
-//                Geometry result = findGeom(child, name);
-//                if (result != null) {
-//                    return result;
-//                }
-//            }
-//        } else if (spatial instanceof Geometry) {
-//            if (spatial.getName().startsWith(name)) {
-//                return (Geometry) spatial;
-//            }
-//        }
-//        return null;
-//    }
-
-    public void onAction(String binding, boolean value, float tpf) {
-        if (binding.equals("Lefts")) {
-            hoverControl.steer(value ? 50f : 0);
-        } else if (binding.equals("Rights")) {
-            hoverControl.steer(value ? -50f : 0);
-        } else if (binding.equals("Ups")) {
-            hoverControl.accelerate(value ? 100f : 0);
-        } else if (binding.equals("Downs")) {
-            hoverControl.accelerate(value ? -100f : 0);
-        } else if (binding.equals("Reset")) {
-            if (value) {
-                System.out.println("Reset");
-                hoverControl.setPhysicsLocation(new Vector3f(-140, 14, -23));
-                hoverControl.setPhysicsRotation(new Matrix3f());
-                hoverControl.clearForces();
-            } else {
-            }
-        } else if (binding.equals("Space") && value) {
-            makeMissile();
-        }
     }
 
     private void makeMissile() {
@@ -238,17 +159,6 @@ public class TestFancyCar extends SimpleApplication implements ActionListener {
         key2.setGenerateMips(true);
         Texture tex2 = assetManager.loadTexture(key2);
         mat2.setTexture("ColorMap", tex2);
-    }
-
-    protected void initCrossHairs() {
-        guiFont = assetManager.loadFont("Interface/Fonts/Default.fnt");
-        BitmapText ch = new BitmapText(guiFont, false);
-        ch.setSize(guiFont.getCharSet().getRenderedSize() * 2);
-        ch.setText("+"); // crosshairs
-        ch.setLocalTranslation( // center
-                settings.getWidth() / 2 - guiFont.getCharSet().getRenderedSize() / 3 * 2,
-                settings.getHeight() / 2 + ch.getLineHeight() / 2, 0);
-        guiNode.attachChild(ch);
     }
 
     @Override
