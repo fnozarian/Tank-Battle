@@ -24,7 +24,7 @@ public class Tank {
 
     //public VehicleControl vehicleControl; //swap with PhysicsHoverControl
     PhysicsHoverControl vehicleControl;
-    private Node vehicleNode;
+    private Node tankNode;
     private final float accelerationForce = 1000.0f;
     private final float brakeForce = 100.0f;
     private float steeringValue = 0;
@@ -45,7 +45,7 @@ public class Tank {
     public Tank(AssetManager assetManager,Camera cam) {
         
         this.assetManager = assetManager;
-        Node tankNode = (Node) tankModel;
+        tankNode = (Node) tankModel;
         
         //Configuring Model
         assetManager.loadModel("Models/HoverTank/Tank2.mesh.xml");
