@@ -7,6 +7,9 @@ import com.jme3.app.state.AppStateManager;
 import com.jme3.asset.AssetManager;
 import com.jme3.font.BitmapText;
 import com.jme3.app.SimpleApplication;
+import com.jme3.bullet.BulletAppState;
+import com.jme3.bullet.PhysicsSpace;
+import com.jme3.bullet.control.VehicleControl;
 import com.jme3.font.BitmapFont;
 import com.jme3.input.InputManager;
 import com.jme3.input.KeyInput;
@@ -40,10 +43,16 @@ public class InGameState extends AbstractAppState implements ActionListener{
         this.stateManager = this.app.getStateManager();
         this.guiFont = this.assetManager.loadFont("Interface/Fonts/Default.fnt");
         
+        tank1 = new Tank(this.app);
+        rootNode.attachChild(tank1.getTankNode());
+        getPhysicsSpace().add(tank1.getTankNode());
         
         setupKeys();
         initCrossHairs();
         
+    }
+    private PhysicsSpace getPhysicsSpace() {
+        return stateManager.getState(BulletAppState.class).getPhysicsSpace();
     }
 
     @Override
@@ -59,8 +68,8 @@ public class InGameState extends AbstractAppState implements ActionListener{
         ch.setSize(guiFont.getCharSet().getRenderedSize() * 2);
         ch.setText("+"); // crosshairs
         ch.setLocalTranslation( // center
-                settings.getWidth() / 2 - guiFont.getCharSet().getRenderedSize() / 3 * 2,
-                settings.getHeight() / 2 + ch.getLineHeight() / 2, 0);
+                app.getContext().getSettings().getWidth() / 2 - guiFont.getCharSet().getRenderedSize() / 3 * 2,
+                app.getContext().getSettings().getHeight() / 2 + ch.getLineHeight() / 2, 0);
         app.getGuiNode().attachChild(ch);
     }
     private void setupKeys() {
@@ -80,20 +89,24 @@ public class InGameState extends AbstractAppState implements ActionListener{
 
     public void onAction(String name, boolean isPressed, float tpf) {
         
+        //Oops!
+        //Configuring controling actions
+        PhysicsHoverControl control = tank1.getVehicleControl();
+        
         if (name.equals("Lefts")) {
-            hoverControl.steer(isPressed ? 50f : 0);
+            tank1.steer(isPressed ? 50f : 0);
         } else if (name.equals("Rights")) {
-            hoverControl.steer(isPressed ? -50f : 0);
+            tank1.steer(isPressed ? -50f : 0);
         } else if (name.equals("Ups")) {
-            hoverControl.accelerate(isPressed ? 100f : 0);
+            tank1.accelerate(isPressed ? 100f : 0);
         } else if (name.equals("Downs")) {
-            hoverControl.accelerate(isPressed ? -100f : 0);
+            tank1.accelerate(isPressed ? -100f : 0);
         } else if (name.equals("Reset")) {
             if (isPressed) {
                 System.out.println("Reset");
-                hoverControl.setPhysicsLocation(new Vector3f(-140, 14, -23));
-                hoverControl.setPhysicsRotation(new Matrix3f());
-                hoverControl.clearForces();
+                control.setPhysicsLocation(new Vector3f(-140, 14, -23));
+                control.setPhysicsRotation(new Matrix3f());
+                control.clearForces();
             } else {
             }
         } else if (name.equals("Space") && isPressed) {
