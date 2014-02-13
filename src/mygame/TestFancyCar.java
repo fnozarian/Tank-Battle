@@ -134,7 +134,7 @@ public class TestFancyCar extends SimpleApplication implements ActionListener {
 
         setupKeys();
         PhysicsTestHelper.createPhysicsTestWorld(rootNode, assetManager, bulletAppState.getPhysicsSpace());
-//        setupFloor();
+//      setupFloor();
         buildPlayer();
 
         DirectionalLight dl = new DirectionalLight();
@@ -144,6 +144,14 @@ public class TestFancyCar extends SimpleApplication implements ActionListener {
         dl = new DirectionalLight();
         dl.setDirection(new Vector3f(0.5f, -0.1f, 0.3f).normalizeLocal());
         rootNode.addLight(dl);
+        
+        
+        rootNode.attachChild(spaceCraftNode);
+        getPhysicsSpace().add(vehicleControl);
+        flyCam.setEnabled(false);
+        
+        
+        
     }
 
     private PhysicsSpace getPhysicsSpace() {
@@ -168,60 +176,23 @@ public class TestFancyCar extends SimpleApplication implements ActionListener {
 //        rootNode.attachChild(tb);
 //        getPhysicsSpace().add(tb);
 //    }
-    private Geometry findGeom(Spatial spatial, String name) {
-        if (spatial instanceof Node) {
-            Node node = (Node) spatial;
-            for (int i = 0; i < node.getQuantity(); i++) {
-                Spatial child = node.getChild(i);
-                Geometry result = findGeom(child, name);
-                if (result != null) {
-                    return result;
-                }
-            }
-        } else if (spatial instanceof Geometry) {
-            if (spatial.getName().startsWith(name)) {
-                return (Geometry) spatial;
-            }
-        }
-        return null;
-    }
-
-    private void buildPlayer() {
-        float stiffness = 120.0f;//200=f1 car
-        float compValue = 0.2f; //(lower than damp!)
-        float dampValue = 0.3f;
-        final float mass = 400;
-
-        spaceCraft = assetManager.loadModel("Models/HoverTank/Tank2.mesh.xml");
-        CollisionShape colShape = CollisionShapeFactory.createDynamicMeshShape(spaceCraft);
-        spaceCraft.setShadowMode(ShadowMode.CastAndReceive);
-        spaceCraft.setLocalTranslation(new Vector3f(-60, 14, -23));
-        spaceCraft.setLocalRotation(new Quaternion(new float[]{0, 0.01f, 0}));
-
-        hoverControl = new PhysicsHoverControl(colShape, 500);
-        hoverControl.setCollisionGroup(PhysicsCollisionObject.COLLISION_GROUP_02);
-        spaceCraft.addControl(hoverControl);
-
-        camNode = new CameraNode("camNode", cam);
-        //Setting the direction to Spatial to camera, this means the camera will copy the movements of the Node
-        camNode.setControlDir(CameraControl.ControlDirection.SpatialToCamera);
-        camNode.setLocalTranslation(0f, 4f, -12f);
-        Node spaceCraftNode = (Node) spaceCraft;
-        spaceCraftNode.attachChild(camNode);
-
-        tankIdleSound = new AudioNode(assetManager, "Sounds/propeller-plane-idle.wav", false);
-        tankIdleSound.setLooping(true);
-        spaceCraftNode.attachChild(tankIdleSound);
-        tankIdleSound.play();
-        
-        weaponSound1 = new AudioNode(assetManager,"Sounds/weapon1.wav",false);
-        spaceCraftNode.attachChild(weaponSound1);
-        
-        rootNode.attachChild(spaceCraftNode);
-        getPhysicsSpace().add(hoverControl);
-
-        flyCam.setEnabled(false);
-    }
+//    private Geometry findGeom(Spatial spatial, String name) {
+//        if (spatial instanceof Node) {
+//            Node node = (Node) spatial;
+//            for (int i = 0; i < node.getQuantity(); i++) {
+//                Spatial child = node.getChild(i);
+//                Geometry result = findGeom(child, name);
+//                if (result != null) {
+//                    return result;
+//                }
+//            }
+//        } else if (spatial instanceof Geometry) {
+//            if (spatial.getName().startsWith(name)) {
+//                return (Geometry) spatial;
+//            }
+//        }
+//        return null;
+//    }
 
     public void onAction(String binding, boolean value, float tpf) {
         if (binding.equals("Lefts")) {
