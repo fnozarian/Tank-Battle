@@ -24,7 +24,6 @@ public class Tank {
 
     //public VehicleControl vehicleControl; //swap with PhysicsHoverControl
     PhysicsHoverControl vehicleControl;
-    private Node tankNode;
     private final float accelerationForce = 1000.0f;
     private final float brakeForce = 100.0f;
     private float steeringValue = 0;
@@ -38,21 +37,24 @@ public class Tank {
     private int health;
     CollisionShape colShape;
     AudioNode tankIdleSound;
-    Spatial tankModel;
+    
+    private Node tankNode;
+    private Geometry tankBody;
+    
     CameraNode camNode;
     AssetManager assetManager;
     
     public Tank(AssetManager assetManager,Camera cam) {
         
         this.assetManager = assetManager;
-        tankNode = (Node) tankModel;
         
         //Configuring Model
-        assetManager.loadModel("Models/HoverTank/Tank2.mesh.xml");
-        colShape = CollisionShapeFactory.createDynamicMeshShape(tankModel);
-        tankModel.setShadowMode(RenderQueue.ShadowMode.CastAndReceive);
-        tankModel.setLocalTranslation(new Vector3f(-60, 14, -23));
-        tankModel.setLocalRotation(new Quaternion(new float[]{0, 0.01f, 0}));
+        //tankModel = assetManager.loadModel("Models/HoverTank/Tank2.mesh.xml");
+        tankBody = (Geometry)assetManager.loadModel("Models/HoverTank/Tank2.mesh.xml");
+        colShape = CollisionShapeFactory.createDynamicMeshShape(tankBody);
+        tankBody.setShadowMode(RenderQueue.ShadowMode.CastAndReceive);
+        tankBody.setLocalTranslation(new Vector3f(-60, 14, -23));
+        tankBody.setLocalRotation(new Quaternion(new float[]{0, 0.01f, 0}));
         
         //Configuring camera
         camNode = new CameraNode("camNode", cam);
@@ -64,8 +66,8 @@ public class Tank {
         //Configuring vehicle control
         vehicleControl = new PhysicsHoverControl(colShape, 500);
         vehicleControl.setCollisionGroup(PhysicsCollisionObject.COLLISION_GROUP_02);
-        tankModel.addControl(vehicleControl);
-
+        tankNode.addControl(vehicleControl);
+        
         //Configuring tank sound
         tankIdleSound = new AudioNode(assetManager, "Sounds/propeller-plane-idle.wav", false);
         tankIdleSound.setLooping(true);
