@@ -1,24 +1,11 @@
 package mygame;
 
 import com.jme3.app.SimpleApplication;
-import com.jme3.asset.TextureKey;
-import com.jme3.audio.AudioNode;
 import com.jme3.bullet.BulletAppState;
-import com.jme3.bullet.collision.shapes.SphereCollisionShape;
-import com.jme3.bullet.control.RigidBodyControl;
-import com.jme3.bullet.control.VehicleControl;
-import com.jme3.bullet.objects.VehicleWheel;
 import com.jme3.light.DirectionalLight;
-import com.jme3.material.Material;
 import com.jme3.math.Vector3f;
 import com.jme3.renderer.queue.RenderQueue.ShadowMode;
-import com.jme3.scene.CameraNode;
-import com.jme3.scene.Geometry;
-import com.jme3.scene.Node;
-import com.jme3.scene.Spatial;
-import com.jme3.scene.shape.Sphere;
 import com.jme3.shadow.BasicShadowRenderer;
-import com.jme3.texture.Texture;
 import com.jme3.app.state.AbstractAppState;
 
 public class Main extends SimpleApplication {

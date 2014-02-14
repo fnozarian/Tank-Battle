@@ -41,6 +41,7 @@ public class InGameState extends AbstractAppState implements ActionListener{
         this.rootNode = this.app.getRootNode();
         this.assetManager = this.app.getAssetManager();
         this.stateManager = this.app.getStateManager();
+        this.inputManager = this.app.getInputManager();
         this.guiFont = this.assetManager.loadFont("Interface/Fonts/Default.fnt");
         
         tank1 = new Tank(this.app);

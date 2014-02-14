@@ -13,6 +13,7 @@ import com.jme3.scene.Geometry;
 import com.jme3.scene.Node;
 import com.jme3.scene.control.CameraControl;
 import com.jme3.bullet.collision.shapes.CollisionShape;
+import com.jme3.scene.Spatial;
 
 public class Tank {
 
@@ -40,7 +41,7 @@ public class Tank {
     private CollisionShape colShape;
     private AudioNode tankIdleSound;
     private Node tankNode;
-    private Geometry tankBody;
+    private Spatial tankBody;
     private CameraNode camNode;
     private Application app;
     
@@ -48,9 +49,10 @@ public class Tank {
     public Tank(Application app) {
         
         this.app = app;
+        tankNode = new Node();
         
         //Configuring Model
-        tankBody = (Geometry) app.getAssetManager().loadModel("Models/HoverTank/Tank2.mesh.xml");
+        tankBody = app.getAssetManager().loadModel("Models/HoverTank/Tank2.mesh.xml");
         colShape = CollisionShapeFactory.createDynamicMeshShape(tankBody);
         tankBody.setShadowMode(RenderQueue.ShadowMode.CastAndReceive);
         tankBody.setLocalTranslation(new Vector3f(-60, 14, -23));
