@@ -1,4 +1,3 @@
-
 package mygame;
 
 import com.jme3.app.Application;
@@ -9,6 +8,8 @@ import com.jme3.font.BitmapText;
 import com.jme3.app.SimpleApplication;
 import com.jme3.bullet.BulletAppState;
 import com.jme3.bullet.PhysicsSpace;
+import com.jme3.bullet.collision.shapes.SphereCollisionShape;
+import com.jme3.bullet.control.RigidBodyControl;
 import com.jme3.bullet.control.VehicleControl;
 import com.jme3.font.BitmapFont;
 import com.jme3.input.InputManager;
@@ -17,41 +18,50 @@ import com.jme3.input.controls.ActionListener;
 import com.jme3.input.controls.KeyTrigger;
 import com.jme3.math.Matrix3f;
 import com.jme3.math.Vector3f;
+import com.jme3.scene.Geometry;
 import com.jme3.scene.Node;
 
 /**
  *
  * @author MR Blue
  */
-public class InGameState extends AbstractAppState implements ActionListener{
+public class InGameState extends AbstractAppState implements ActionListener {
 
+    private FireBehaviourSimple fireBehaviourSimple;
+    private BulletSimple bulletSimple;
     private SimpleApplication app;
-    private Node              rootNode;
-    private AssetManager      assetManager;
-    private AppStateManager   stateManager;
+    private Node rootNode;
+    private AssetManager assetManager;
+    private AppStateManager stateManager;
     private InputManager inputManager;
     private BitmapFont guiFont;
     private Tank tank1;
-    
+
     @Override
     public void initialize(AppStateManager stateManager, Application app) {
-        super.initialize(stateManager, app); 
-        
-        this.app = (SimpleApplication)app;
+        super.initialize(stateManager, app);
+        this.app = (SimpleApplication) app;
         this.rootNode = this.app.getRootNode();
         this.assetManager = this.app.getAssetManager();
         this.stateManager = this.app.getStateManager();
         this.inputManager = this.app.getInputManager();
         this.guiFont = this.assetManager.loadFont("Interface/Fonts/Default.fnt");
         
+
+
         tank1 = new Tank(this.app);
+     //   Weapon w = new 
         rootNode.attachChild(tank1.getTankNode());
         getPhysicsSpace().add(tank1.getTankNode());
-        
+
         setupKeys();
         initCrossHairs();
-        
+        bulletSimple = new BulletSimple(app);
+        fireBehaviourSimple = new FireBehaviourSimple(app, rootNode, bulletSimple);
+
+
     }
+
     private PhysicsSpace getPhysicsSpace() {
         return stateManager.getState(BulletAppState.class).getPhysicsSpace();
     }
@@ -59,12 +69,12 @@ public class InGameState extends AbstractAppState implements ActionListener{
     @Override
     public void update(float tpf) {
         super.update(tpf);
-        
+
     }
-    
+
     protected void initCrossHairs() {
-        
-        guiFont =  assetManager.loadFont("Interface/Fonts/Default.fnt");
+
+        guiFont = assetManager.loadFont("Interface/Fonts/Default.fnt");
         BitmapText ch = new BitmapText(guiFont, false);
         ch.setSize(guiFont.getCharSet().getRenderedSize() * 2);
         ch.setText("+"); // crosshairs
@@ -73,6 +83,7 @@ public class InGameState extends AbstractAppState implements ActionListener{
                 app.getContext().getSettings().getHeight() / 2 + ch.getLineHeight() / 2, 0);
         app.getGuiNode().attachChild(ch);
     }
+
     private void setupKeys() {
         inputManager.addMapping("Lefts", new KeyTrigger(KeyInput.KEY_A));
         inputManager.addMapping("Rights", new KeyTrigger(KeyInput.KEY_D));
@@ -89,11 +100,11 @@ public class InGameState extends AbstractAppState implements ActionListener{
     }
 
     public void onAction(String name, boolean isPressed, float tpf) {
-        
+
         //Oops!
         //Configuring controling actions
         PhysicsHoverControl control = tank1.getVehicleControl();
-        
+
         if (name.equals("Lefts")) {
             tank1.steer(isPressed ? 50f : 0);
         } else if (name.equals("Rights")) {
@@ -111,9 +122,7 @@ public class InGameState extends AbstractAppState implements ActionListener{
             } else {
             }
         } else if (name.equals("Space") && isPressed) {
-            //makeMissile();
+            fireBehaviourSimple.fire(new Vector3f(0,1,0),new Vector3f(0,1,0));
         }
     }
-    
-    
 }
