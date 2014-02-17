@@ -34,9 +34,9 @@ public class Main extends SimpleApplication {
         mainScreenState.setEnabled(false);//we jump into game at first in debug level
         bulletAppState = new BulletAppState();
         bulletAppState.setThreadingType(BulletAppState.ThreadingType.PARALLEL);
-        stateManager.attach(inGameState);
-        stateManager.attach(mainScreenState);
         stateManager.attach(bulletAppState);
+        
+        
 
         //What are these?!
         rootNode.setShadowMode(ShadowMode.Off);
@@ -56,6 +56,8 @@ public class Main extends SimpleApplication {
         flyCam.setMoveSpeed(10); // is this necessary ?!
         flyCam.setEnabled(false);
         
+        stateManager.attach(inGameState);
+        stateManager.attach(mainScreenState);
     }
     @Override
     public void simpleUpdate(float tpf) {
