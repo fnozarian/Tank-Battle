@@ -6,13 +6,12 @@ import com.jme3.bullet.BulletAppState;
 import com.jme3.math.Vector3f;
 import com.jme3.scene.Node;
 
-public abstract class FireBehaviour {
-
-    Bullet bullet;
-    Application app;
-    Node rootNode;
-    
-    public FireBehaviour(Application app,Node rootNode) {
+public abstract class FireBehaviour {   
+     Bullet bullet;
+     Application app;
+     Node rootNode;
+    public FireBehaviour(Application app,Node rootNode,Bullet bullet) {
+        this.bullet = bullet;
         this.app = app;
         this.rootNode = rootNode;
     }

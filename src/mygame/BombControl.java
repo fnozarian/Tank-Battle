@@ -122,7 +122,7 @@ public class BombControl extends RigidBodyControl implements PhysicsCollisionLis
         if (event.getObjectA() == this || event.getObjectB() == this) {
             space.add(ghostObject);
             ghostObject.setPhysicsLocation(getPhysicsLocation(vector));
-            space.addTickListener(this);
+            space.addTickListener(this); 
             if (effect != null && spatial.getParent() != null) {
                 curTime = 0;
                 effect.setLocalTranslation(spatial.getLocalTranslation());

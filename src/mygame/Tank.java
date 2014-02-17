@@ -56,7 +56,7 @@ public class Tank {
         tankBody = this.app.getAssetManager().loadModel("Models/HoverTank/Tank2.mesh.xml");
         colShape = CollisionShapeFactory.createDynamicMeshShape(tankBody);
         tankBody.setShadowMode(RenderQueue.ShadowMode.CastAndReceive);
-        tankBody.setLocalTranslation(new Vector3f(-60, 14, -23));
+        tankBody.setLocalTranslation(new Vector3f(0,0,0));///-60, 14, -23
         tankBody.setLocalRotation(new Quaternion(new float[]{0, 0.01f, 0}));
         tankNode.attachChild(tankBody);
         
