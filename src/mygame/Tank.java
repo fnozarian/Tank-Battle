@@ -45,9 +45,13 @@ public class Tank {
 
     public Tank(Application app) {
 
-        this.app = (SimpleApplication)app;
+        this.app = (SimpleApplication) app;
         tankNode = new Node();
-        
+
+        //initialize members
+        weapons = new ArrayList<Weapon>();
+
+
         //Configuring Model
         tankBody = this.app.getAssetManager().loadModel("Models/HoverTank/Tank2.mesh.xml");
         colShape = CollisionShapeFactory.createDynamicMeshShape(tankBody);
@@ -74,7 +78,7 @@ public class Tank {
         tankIdleSound.setLooping(true);
         tankNode.attachChild(tankIdleSound);
         tankIdleSound.play();
-        
+
         //Adding to screen
         this.app.getRootNode().attachChild(tankNode);
         getPhysicsSpace().add(tankNode);
@@ -85,7 +89,6 @@ public class Tank {
     }
 
     void brake(float force) {
-        
     }
 
     void steer(float value) {
@@ -107,6 +110,7 @@ public class Tank {
     void increaseHealth(int point) {
     }
     //must be destroied ?
+
     public Node getTankNode() {
         return tankNode;
     }
@@ -119,10 +123,38 @@ public class Tank {
         vehicleControl.setPhysicsRotation(new Matrix3f());
         vehicleControl.clearForces();
     }
-    public void addWeapon(Weapon weapon){
+
+    public void addWeapon(Weapon weapon) {
+        //add weapon to tank
         weapons.add(weapon);
+        tankNode.attachChild(weapon.getWeaponNode());
+        //handle activeWeapon
+        if (weapons.size() == 1) {
+            activeWeapon = weapon;
+        }
+        //set translation of weapon related to tank
+        weapon.getWeaponNode().setLocalTranslation((new Vector3f(0, 4, -2)));
         //do something in game e.g show a gun in w
     }
+
+    public void removeWeapon(Weapon weapon) {
+        //handle activeWeapon
+        if (activeWeapon.equals(weapon)) {
+            if (weapons.size() == 1) {
+                activeWeapon = null;
+            } else {
+                activeWeapon = weapons.get(0);
+            }
+        }
+        //remove weapon from tank
+        weapons.remove(weapon);
+        tankNode.detachChild(weapon.getWeaponNode());
+
+    }
+
+    public void attachToWorld(Node rooNode) {
+    }
+
     private PhysicsSpace getPhysicsSpace() {
         return this.app.getStateManager().getState(BulletAppState.class).getPhysicsSpace();
     }

@@ -47,7 +47,7 @@ public class InGameState extends AbstractAppState implements ActionListener {
     private void initTank() {
 
         tank1 = new Tank(this.app);
-        
+
     }
 
     private void initWeapon() {
@@ -55,9 +55,13 @@ public class InGameState extends AbstractAppState implements ActionListener {
         testWeapon = new Weapon(app, rootNode, 200, new SimpleBulletBuilder(this.app), new FireBehaviourSimple(this.app, rootNode), "Sounds/weapon1.wav");
         tank1.getTankNode().attachChild(testWeapon.getWeaponNode());
         testWeapon.getWeaponNode().setLocalTranslation((new Vector3f(0, 4, -2)));
-    }
+        
+        //build all weapons 
+        testWeapon = new Weapon(app, rootNode, 200, new BulletCreatorSimple(this.app), new FireBehaviourSimple(this.app, rootNode), "Sounds/weapon1.wav");
 
-    
+        //attach needed weapons to tank
+        tank1.addWeapon(testWeapon);
+    }
 
     @Override
     public void update(float tpf) {
