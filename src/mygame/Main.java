@@ -7,11 +7,14 @@ import com.jme3.math.Vector3f;
 import com.jme3.renderer.queue.RenderQueue.ShadowMode;
 import com.jme3.shadow.BasicShadowRenderer;
 import com.jme3.app.state.AbstractAppState;
+import com.jme3.niftygui.NiftyJmeDisplay;
+import de.lessvoid.nifty.Nifty;
+import de.lessvoid.nifty.screen.ScreenController;
 
 public class Main extends SimpleApplication {
 
     private AbstractAppState inGameState;
-    private AbstractAppState mainScreenState;
+    private ScreenController startScreenControler;
     private BulletAppState bulletAppState;
     private BasicShadowRenderer bsr;
     private float steeringValue = 0;
@@ -29,9 +32,19 @@ public class Main extends SimpleApplication {
         bulletAppState = new BulletAppState();
         bulletAppState.setThreadingType(BulletAppState.ThreadingType.PARALLEL);
         inGameState = new InGameState();
-        mainScreenState = new MainScreenState();
-        mainScreenState.setEnabled(false);//we jump into game at first in debug level
-        
+
+        startScreenControler = new StartScreenState(this);
+        NiftyJmeDisplay display = new NiftyJmeDisplay(assetManager, inputManager, audioRenderer, viewPort); //create jme-nifty-processor
+        guiViewPort.addProcessor(display); //add it to your gui-viewport so that the processor will start working
+        Nifty nifty = display.getNifty();
+        nifty.fromXml("Interface/Start.xml", "hud", startScreenControler);
+
+
+
+
+
+
+
 
 
         //What are these?!
@@ -53,7 +66,7 @@ public class Main extends SimpleApplication {
         flyCam.setEnabled(false);
 
         stateManager.attach(inGameState);
-        stateManager.attach(mainScreenState);
+        stateManager.attach((AbstractAppState)startScreenControler);
 
     }
 

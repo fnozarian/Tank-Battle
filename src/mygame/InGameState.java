@@ -54,12 +54,12 @@ public class InGameState extends AbstractAppState implements ActionListener {
     private void initWeapon() {
 
 
-        //build all weapons 
-        testWeapon = new Weapon(app, rootNode, 200, new BulletCreatorSimple(this.app), new FireBehaviourSimple(this.app, rootNode), "Sounds/weapon1.wav");
-
-        //attach needed weapons to tank
-        tank1.addWeapon(testWeapon);
-      
+//        //build all weapons 
+//        testWeapon = new Weapon(app, rootNode, 200, new BulletCreatorSimple(this.app), new FireBehaviourSimple(this.app, rootNode), "Sounds/weapon1.wav");
+//
+//        //attach needed weapons to tank
+//        tank1.addWeapon(testWeapon);
+//      
 
 
         
