@@ -27,16 +27,14 @@ import com.jme3.scene.Node;
  */
 public class InGameState extends AbstractAppState implements ActionListener {
 
-    private FireBehaviourSimple fireBehaviourSimple;
-    private BulletSimple bulletSimple;
     private SimpleApplication app;
-    private Node rootNode;
-    private AssetManager assetManager;
-    private AppStateManager stateManager;
+    private Node              rootNode;
+    private AssetManager      assetManager;
+    private AppStateManager   stateManager;
     private InputManager inputManager;
     private BitmapFont guiFont;
     private Tank tank1;
-
+    private Weapon testWeapon;
     @Override
     public void initialize(AppStateManager stateManager, Application app) {
         super.initialize(stateManager, app);
@@ -47,17 +45,16 @@ public class InGameState extends AbstractAppState implements ActionListener {
         this.inputManager = this.app.getInputManager();
         this.guiFont = this.assetManager.loadFont("Interface/Fonts/Default.fnt");
         
-
-
         tank1 = new Tank(this.app);
-     //   Weapon w = new 
+        testWeapon = new Weapon(app, rootNode, 200,new BulletCreatorSimple(this.app),new FireBehaviourSimple(this.app,rootNode),"Sounds/weapon1.wav");
+        tank1.getTankNode().attachChild(testWeapon.getWeaponNode());
+        testWeapon.getWeaponNode().setLocalTranslation((new Vector3f(0,4,-2)));
+
         rootNode.attachChild(tank1.getTankNode());
         getPhysicsSpace().add(tank1.getTankNode());
 
         setupKeys();
         initCrossHairs();
-        bulletSimple = new BulletSimple(app);
-        fireBehaviourSimple = new FireBehaviourSimple(app, rootNode, bulletSimple);
 
 
     }
@@ -122,7 +119,9 @@ public class InGameState extends AbstractAppState implements ActionListener {
             } else {
             }
         } else if (name.equals("Space") && isPressed) {
-            fireBehaviourSimple.fire(new Vector3f(0,1,0),new Vector3f(0,1,0));
+            
+            testWeapon.fire(tank1.getTankNode().getWorldRotation().getRotationColumn(2));         
+
         }
     }
 }

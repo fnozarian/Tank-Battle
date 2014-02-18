@@ -5,6 +5,9 @@
 package mygame;
 
 import com.jme3.app.Application;
+import com.jme3.bullet.BulletAppState;
+import com.jme3.bullet.collision.shapes.SphereCollisionShape;
+import com.jme3.bullet.control.RigidBodyControl;
 import com.jme3.math.Vector3f;
 import com.jme3.scene.Geometry;
 import com.jme3.scene.Node;
@@ -15,21 +18,19 @@ import com.jme3.scene.Node;
  */
 public class FireBehaviourSimple extends FireBehaviour {
 
-
-    public FireBehaviourSimple(Application app,Node rootNode,Bullet bullet) {
-        super(app,rootNode,bullet);
-       // BulletSimple b = new BulletSimple(app);
+    public FireBehaviourSimple(Application app, Node rootNode) {
+        super(app, rootNode);
+        // BulletSimple b = new BulletSimple(app);
     }
 
     @Override
-    void fire(Vector3f direction, Vector3f location) {
-        
-        
-            Geometry b = bullet.buildBullet(new Vector3f(0,2,0));
-            rootNode.attachChild(b);
+    void fire(Vector3f location, Vector3f direction,BulletCreator bulletCreator) {
+        Bullet b = bulletCreator.buildBullet(direction);
+        b.setLocalTranslation(location);
+        b.addControl();
+        rootNode.attachChild(b.getGeometry());
 
-
-       // weaponSound1.play();
+        
 
     }
 }

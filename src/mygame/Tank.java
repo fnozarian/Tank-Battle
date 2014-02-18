@@ -1,7 +1,6 @@
 package mygame;
-//tank
+
 import com.jme3.app.Application;
-import com.jme3.app.SimpleApplication;
 import java.util.ArrayList;
 import com.jme3.audio.AudioNode;
 import com.jme3.bullet.collision.PhysicsCollisionObject;
@@ -10,21 +9,21 @@ import com.jme3.math.Quaternion;
 import com.jme3.math.Vector3f;
 import com.jme3.renderer.queue.RenderQueue;
 import com.jme3.scene.CameraNode;
+import com.jme3.scene.Geometry;
 import com.jme3.scene.Node;
 import com.jme3.scene.control.CameraControl;
 import com.jme3.bullet.collision.shapes.CollisionShape;
 import com.jme3.scene.Spatial;
-import com.jme3.bullet.BulletAppState;
 
 public class Tank {
 
     //public VehicleControl vehicleControl; //swap with PhysicsHoverControl
     private PhysicsHoverControl vehicleControl;
-
+    
     public PhysicsHoverControl getVehicleControl() {
         return vehicleControl;
     }
-
+    
     public void setVehicleControl(PhysicsHoverControl vehicleControl) {
         this.vehicleControl = vehicleControl;
     }
@@ -44,27 +43,27 @@ public class Tank {
     private Node tankNode;
     private Spatial tankBody;
     private CameraNode camNode;
-    private SimpleApplication app;
-    
+    private Application app;
     
     public Tank(Application app) {
         
-        this.app = (SimpleApplication)app;
+        this.app = app;
         tankNode = new Node();
-        
+
         //Configuring Model
-        tankBody = this.app.getAssetManager().loadModel("Models/HoverTank/Tank2.mesh.xml");
+        tankBody = app.getAssetManager().loadModel("Models/HoverTank/Tank2.mesh.xml");
         colShape = CollisionShapeFactory.createDynamicMeshShape(tankBody);
         tankBody.setShadowMode(RenderQueue.ShadowMode.CastAndReceive);
-        tankBody.setLocalTranslation(new Vector3f(0,0,0));///-60, 14, -23
+        tankBody.setLocalTranslation(new Vector3f(0, 0, 0));///-60, 14, -23
         tankBody.setLocalRotation(new Quaternion(new float[]{0, 0.01f, 0}));
         tankNode.attachChild(tankBody);
-        
+
+
         //Configuring camera
-        camNode = new CameraNode("camNode", this.app.getCamera());
+        camNode = new CameraNode("camNode", app.getCamera());
         //Setting the direction to Spatial to camera, this means the camera will copy the movements of the Node
         camNode.setControlDir(CameraControl.ControlDirection.SpatialToCamera);
-        camNode.setLocalTranslation(0f, 14f, -22f);//4,-12
+        camNode.setLocalTranslation(0f, 4f, -12f);
         tankNode.attachChild(camNode);
 
         //Configuring vehicle control
@@ -73,38 +72,42 @@ public class Tank {
         tankNode.addControl(vehicleControl);
 
         //Configuring tank sound
-        tankIdleSound = new AudioNode(this.app.getAssetManager(), "Sounds/propeller-plane-idle.wav", false);
+        tankIdleSound = new AudioNode(app.getAssetManager(), "Sounds/propeller-plane-idle.wav", false);
         tankIdleSound.setLooping(true);
         tankNode.attachChild(tankIdleSound);
         tankIdleSound.play();
-        this.app.getRootNode().attachChild(tankNode);
-        this.app.getStateManager().getState(BulletAppState.class).getPhysicsSpace().add(tankBody);
-        System.out.println("End of Tank");
     }
     
     void accelerate(float force) {
+        vehicleControl.accelerate(force);
     }
-
+    
     void brake(float force) {
     }
-
+    
     void steer(float value) {
+        vehicleControl.steer(value);
     }
-
+    
     public void fire() {
-        activeWeapon.fire();
+        //activeWeapon.fire();
     }
-
+    
     public void switchWeapon(Weapon weapon) {
         activeWeapon = weapon;
     }
-
+    
     void decreaseHealth(int point) {
     }
-
+    
     void increaseHealth(int point) {
     }
+
     public Node getTankNode() {
         return tankNode;
+    }
+    
+    public Spatial getTankBody() {
+        return tankBody;
     }
 }
