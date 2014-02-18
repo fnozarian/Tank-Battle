@@ -15,41 +15,43 @@ import com.jme3.texture.Texture;
  *
  * @author vahid
  */
-public class BulletCreatorSimple extends BulletCreator {
+public class SimpleBulletBuilder extends BulletBuilder {
 
-    public BulletCreatorSimple(Application app) {
+    public SimpleBulletBuilder(Application app) {
         super(app);
     }
 
     @Override
-    protected Mesh initMesh() {
+    protected void initMesh() {
         Sphere s = new Sphere(32, 32, 0.2f, true, false);
         s.setTextureMode(Sphere.TextureMode.Projected);
-        return s;
+        //Oops!
+        mesh = (Mesh)s;
     }
 
     @Override
-    protected Material initMaterial() {
-        Material mat = new Material(app.getAssetManager(), "Common/MatDefs/Misc/Unshaded.j3md");
+    protected void initMaterial() {
+        material = new Material(app.getAssetManager(), "Common/MatDefs/Misc/Unshaded.j3md");
         TextureKey key2 = new TextureKey("Textures/Terrain/Rock/Rock.PNG");
         key2.setGenerateMips(true);
         Texture tex2 = app.getAssetManager().loadTexture(key2);
-        mat.setTexture("ColorMap", tex2);
-        return mat;
+        material.setTexture("ColorMap", tex2);
     }
 
     @Override
-    protected int initPower() {
-        return 1;
+    protected void initPower() {
+        power = 1;
     }
 
+    /**
+     * Build Bullet And Also Add to State Manager
+     * @param velocityDirection 
+     */
     @Override
-    protected RigidBodyControl buildBulletControl(Vector3f velocityDirection) {
+    protected void buildBulletControl(Vector3f velocityDirection) {
         SphereCollisionShape bulletCollisionShape = new SphereCollisionShape(0.4f);
-        RigidBodyControl bulletControl;
         bulletControl = new BombControl(app.getAssetManager(), bulletCollisionShape, 0.001f);
         bulletControl.setLinearVelocity((velocityDirection).mult(55));
         app.getStateManager().getState(BulletAppState.class).getPhysicsSpace().add(bulletControl);
-        return bulletControl;
     }
 }

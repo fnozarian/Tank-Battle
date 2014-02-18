@@ -101,7 +101,6 @@ public class Tank {
         activeWeapon = weapons.get(weapons.indexOf(weapon));
     }
     
-    
     void decreaseHealth(int point) {
     }
 
@@ -123,9 +122,6 @@ public class Tank {
     public void addWeapon(Weapon weapon){
         weapons.add(weapon);
         //do something in game e.g show a gun in w
-    }
-    public void attachToWorld(Node rooNode){
-        
     }
     private PhysicsSpace getPhysicsSpace() {
         return this.app.getStateManager().getState(BulletAppState.class).getPhysicsSpace();

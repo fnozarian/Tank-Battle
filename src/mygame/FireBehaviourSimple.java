@@ -15,7 +15,7 @@ public class FireBehaviourSimple extends FireBehaviour {
     }
 
     @Override
-    public void fire(Vector3f location, Vector3f direction,BulletCreator bulletCreator) {
+    public void fire(Vector3f location, Vector3f direction,BulletBuilder bulletCreator) {
         Bullet b = bulletCreator.buildBullet(direction);
         b.setLocalTranslation(location);
         b.addControl();

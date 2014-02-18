@@ -52,7 +52,7 @@ public class InGameState extends AbstractAppState implements ActionListener {
 
     private void initWeapon() {
 
-        testWeapon = new Weapon(app, rootNode, 200, new BulletCreatorSimple(this.app), new FireBehaviourSimple(this.app, rootNode), "Sounds/weapon1.wav");
+        testWeapon = new Weapon(app, rootNode, 200, new SimpleBulletBuilder(this.app), new FireBehaviourSimple(this.app, rootNode), "Sounds/weapon1.wav");
         tank1.getTankNode().attachChild(testWeapon.getWeaponNode());
         testWeapon.getWeaponNode().setLocalTranslation((new Vector3f(0, 4, -2)));
     }

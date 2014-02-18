@@ -11,7 +11,7 @@ public class Weapon {
     Node rootNode;
     private Node weaponNode;
     private FireBehaviour fireBehaviour;
-    private BulletCreator bulletCreator;
+    private BulletBuilder bulletCreator;
     private int bulletCount;
     private AudioNode sound;
 
@@ -19,7 +19,7 @@ public class Weapon {
         this.fireBehaviour = fireBehaviour;
     }
 
-    public void setBulletCreator(BulletCreator bulletCreator) {
+    public void setBulletCreator(BulletBuilder bulletCreator) {
         this.bulletCreator = bulletCreator;
     }
 
@@ -32,7 +32,7 @@ public class Weapon {
 //        this.bulletAppState = bulletAppState;
 //        this.bulletCount = bulletCount;
 //    }
-    public Weapon(Application app, Node rootNode, int bulletCount, BulletCreator bulletCreator, FireBehaviour fireBehaviour, String fireSound) {// fireSound should be mono
+    public Weapon(Application app, Node rootNode, int bulletCount, BulletBuilder bulletCreator, FireBehaviour fireBehaviour, String fireSound) {// fireSound should be mono
 
         this.app = app;
         this.rootNode = rootNode;

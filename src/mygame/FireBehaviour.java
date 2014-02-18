@@ -16,5 +16,5 @@ public abstract class FireBehaviour {
         
     }
 
-    public abstract void fire(Vector3f location, Vector3f direction, BulletCreator bulletCreator);
+    public abstract void fire(Vector3f location, Vector3f direction, BulletBuilder bulletCreator);
 }
