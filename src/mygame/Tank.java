@@ -103,7 +103,7 @@ public class Tank {
     public void switchWeapon(Weapon weapon) {
         activeWeapon = weapons.get(weapons.indexOf(weapon));
     }
-    
+
     void decreaseHealth(int point) {
     }
 
