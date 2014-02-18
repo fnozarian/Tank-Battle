@@ -1,7 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package mygame;
 
 import com.jme3.bullet.control.RigidBodyControl;
@@ -15,9 +11,9 @@ import com.jme3.scene.Geometry;
  */
 public class Bullet {
 
-    Geometry geometry;
-    int power;
-    RigidBodyControl bulletControl;
+    private Geometry geometry;
+    private int power;
+    private RigidBodyControl bulletControl;
 
     public void setGeometry(Geometry geometry) {
         this.geometry = geometry;
@@ -36,6 +32,7 @@ public class Bullet {
         geometry.setMaterial(material);
     }
 
+    @Override
     public Bullet clone() {
         try {
             return (Bullet) super.clone();

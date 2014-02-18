@@ -81,6 +81,11 @@ public class BombControl extends RigidBodyControl implements PhysicsCollisionLis
         prepareEffect(manager);
     }
 
+    /**
+     *
+     * @param space
+     */
+    @Override
     public void setPhysicsSpace(PhysicsSpace space) {
         super.setPhysicsSpace(space);
         if (space != null) {

@@ -10,12 +10,7 @@ import com.jme3.math.Vector3f;
 import com.jme3.scene.Mesh;
 import com.jme3.scene.shape.Sphere;
 import com.jme3.texture.Texture;
-import mygame.BulletCreator;
 
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 /**
  *
  * @author vahid
@@ -27,16 +22,15 @@ public class BulletCreatorSimple extends BulletCreator {
     }
 
     @Override
-    Mesh instantiaceMesh() {
+    protected Mesh initMesh() {
         Sphere s = new Sphere(32, 32, 0.2f, true, false);
         s.setTextureMode(Sphere.TextureMode.Projected);
         return s;
     }
 
     @Override
-    Material instantiaceMaterial() {
-        Material mat;
-        mat = new Material(app.getAssetManager(), "Common/MatDefs/Misc/Unshaded.j3md");
+    protected Material initMaterial() {
+        Material mat = new Material(app.getAssetManager(), "Common/MatDefs/Misc/Unshaded.j3md");
         TextureKey key2 = new TextureKey("Textures/Terrain/Rock/Rock.PNG");
         key2.setGenerateMips(true);
         Texture tex2 = app.getAssetManager().loadTexture(key2);
@@ -45,16 +39,16 @@ public class BulletCreatorSimple extends BulletCreator {
     }
 
     @Override
-    int instantiacePower() {
+    protected int initPower() {
         return 1;
     }
 
     @Override
-    RigidBodyControl buildBulletControl(Vector3f direction) {
+    protected RigidBodyControl buildBulletControl(Vector3f velocityDirection) {
         SphereCollisionShape bulletCollisionShape = new SphereCollisionShape(0.4f);
         RigidBodyControl bulletControl;
         bulletControl = new BombControl(app.getAssetManager(), bulletCollisionShape, 0.001f);
-        bulletControl.setLinearVelocity((direction).mult(55));
+        bulletControl.setLinearVelocity((velocityDirection).mult(55));
         app.getStateManager().getState(BulletAppState.class).getPhysicsSpace().add(bulletControl);
         return bulletControl;
     }

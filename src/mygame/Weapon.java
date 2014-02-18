@@ -1,9 +1,7 @@
 package mygame;
-///////v
+
 import com.jme3.app.Application;
-import com.jme3.asset.AssetManager;
 import com.jme3.audio.AudioNode;
-import com.jme3.bullet.BulletAppState;
 import com.jme3.math.Vector3f;
 import com.jme3.scene.Node;
 
@@ -47,10 +45,13 @@ public class Weapon {
         weaponNode.attachChild(sound);
 
     }
-
-    public void fire(Vector3f tankDirection) {
+    /**
+     * 
+     * @param fireDirection Specify the direction of firing 
+     */
+    public void fire(Vector3f fireDirection) {
         if (bulletCount != 0) {
-            fireBehaviour.fire(weaponNode.getWorldTranslation(), tankDirection, bulletCreator);
+            fireBehaviour.fire(weaponNode.getWorldTranslation(), fireDirection, bulletCreator);
             bulletCount--;
             sound.play();
         } else {
