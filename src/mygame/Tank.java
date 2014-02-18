@@ -48,6 +48,10 @@ public class Tank {
         this.app = (SimpleApplication)app;
         tankNode = new Node();
         
+        //initialize members
+        weapons = new ArrayList<Weapon>();
+        
+        
         //Configuring Model
         tankBody = this.app.getAssetManager().loadModel("Models/HoverTank/Tank2.mesh.xml");
         colShape = CollisionShapeFactory.createDynamicMeshShape(tankBody);
@@ -121,8 +125,25 @@ public class Tank {
         vehicleControl.clearForces();
     }
     public void addWeapon(Weapon weapon){
+        //add weapon to tank
         weapons.add(weapon);
+        tankNode.attachChild(weapon.getWeaponNode());
+        //handle activeWeapon
+        if (weapons.size()==1){
+            activeWeapon = weapon;
+        }
         //do something in game e.g show a gun in w
+    }
+    public void removeWeapon(Weapon weapon){
+        //handle activeWeapon
+        if (activeWeapon.equals(weapon)) {
+            if(weapons.size()==1) activeWeapon = null;
+            else activeWeapon = weapons.get(0);
+        }
+        //remove weapon from tank
+        weapons.remove(weapon);
+        tankNode.detachChild(weapon.getWeaponNode());
+        
     }
     public void attachToWorld(Node rooNode){
         
