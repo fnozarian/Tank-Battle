@@ -36,7 +36,7 @@ public class Weapon {
     public Weapon(Application app, int bulletCount, BulletBuilder bulletCreator, FireBehaviour fireBehaviour, String fireSound) {// fireSound should be mono
 
         this.app = (SimpleApplication)app;
-        this.rootNode = rootNode;
+        this.rootNode = this.app.getRootNode();
         this.bulletCount = bulletCount;
         this.bulletCreator = bulletCreator;
         this.fireBehaviour = fireBehaviour;

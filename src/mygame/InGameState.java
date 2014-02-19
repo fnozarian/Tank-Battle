@@ -30,6 +30,7 @@ public class InGameState extends AbstractAppState implements ActionListener {
     private BitmapFont guiFont;
     private Tank tank1;
     private Tank tank2;
+    private Tank defaultPlayerTank;//
     private Weapon testWeapon;
 
     @Override
@@ -44,19 +45,21 @@ public class InGameState extends AbstractAppState implements ActionListener {
 
         initWeapon();
         initTank();
-        initKeys();
         initCrossHairs();
+        initKeys();
     }
 
     private void initTank() {
-        //build the tank
-        tank1 = new Tank(this.app);
-      //  tank2 = new Tank(this.app);
-        tank1.setAsPlayer();
-        tank1.attachToWorld(new Vector3f(200,200,200),new Quaternion(new float[]{0, 0.01f, 0}));
-     //   tank2.attachToWorld(new Vector3f(0,0,0),new Quaternion(new float[]{0, 0.01f, 0}));
-        //add necessary weapons to tank
+        //build tank(S)
+        tank1 = new Tank(this.app,new Vector3f(0,0,0),new Quaternion(new float[]{0, 0.01f, 0}));
+        tank2 = new Tank(this.app,new Vector3f(0,0,40),new Quaternion(new float[]{0, 1.5f, 0}));
+        
+        //add necessary weapons to tank(S)
         tank1.addWeapon(testWeapon);
+        
+        //set default tank for player
+        setPlayerTank(tank1);// in order to take care of camera, keys, etc 
+
         
     }
 
@@ -155,25 +158,31 @@ public class InGameState extends AbstractAppState implements ActionListener {
         inputManager.addListener(this, "Space");
         inputManager.addListener(this, "Reset");
     }
+    protected void setPlayerTank(Tank tank){
+
+        tank.setAsPlayer();
+        defaultPlayerTank = tank;
+
+    }
 
     public void onAction(String name, boolean isPressed, float tpf) {
 
         //Configuring controling actions
         if (name.equals("Lefts")) {
-            tank1.steer(isPressed ? 50f : 0);
+            defaultPlayerTank.steer(isPressed ? 50f : 0);
         } else if (name.equals("Rights")) {
-            tank1.steer(isPressed ? -50f : 0);
+            defaultPlayerTank.steer(isPressed ? -50f : 0);
         } else if (name.equals("Ups")) {
-            tank1.accelerate(isPressed ? 100f : 0);
+            defaultPlayerTank.accelerate(isPressed ? 100f : 0);
         } else if (name.equals("Downs")) {
-            tank1.accelerate(isPressed ? -100f : 0);
+            defaultPlayerTank.accelerate(isPressed ? -100f : 0);
         } else if (name.equals("Reset")) {
             if (isPressed) {
-                tank1.resetTank();
+                defaultPlayerTank.resetTank();
             } else {
             }
         } else if (name.equals("Space") && isPressed) {
-            tank1.fire();
+            defaultPlayerTank.fire();
 
         }
     }
