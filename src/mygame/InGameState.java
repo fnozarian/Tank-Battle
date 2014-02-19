@@ -84,10 +84,14 @@ public class InGameState extends AbstractAppState implements ActionListener {
         float crossHairHeight= screenHeight/ 15;
         float leftMargin = (float)(screenWidth * 0.008);
         float topMargin = (float)(screenHeight * 0.9);
-        float verticalAlignmentSize = (float)(screenWidth * 0.1);
-        float horizontalAlignmentSize = (float)(screenHeight * 0.05);
-        
-        
+        float weaponVerticalAlignmentSize = (float)(screenWidth * 0.05);
+        float textVerticalAlignmentSize = (float)(weaponVerticalAlignmentSize * 0.01);
+        float weaponHorizontalAlignmentSize = (float)(screenHeight * 0.05);
+        float textHorizontalAlignmentSize = (float)(screenWidth * 0.02);
+        float textLeftMargin = (float)(leftMargin + (leftMargin*0.2));
+        float topMarginWeaponDiff = (float)(1.5 * (screenHeight - topMargin)); /// 2;
+                
+                
         Picture crossHair = new Picture("CorssHair");
         crossHair.setImage(assetManager, "Interface/CrossHairs/circle-02-whole.png", true);
         crossHair.setWidth(crossHairWidth);
@@ -100,12 +104,36 @@ public class InGameState extends AbstractAppState implements ActionListener {
         weaponList.setLocalTranslation(leftMargin,topMargin , 0);
         app.getGuiNode().attachChild(weaponList);
 
-        Picture gun = new Picture("Gun");
-        gun.setImage(assetManager, "Interface/Guns/rocket.png", true);
-        gun.setWidth(gunListWidth);
-        gun.setHeight(gunListHeight);
-        gun.setPosition(leftMargin,topMargin - 1* verticalAlignmentSize);
-        app.getGuiNode().attachChild(gun);
+        //Weapon 1
+        float heightW1 = topMargin - topMarginWeaponDiff;
+        Picture weapon1 = new Picture("Gun");
+        weapon1.setImage(assetManager, "Interface/Guns/rocket.png", true);
+        weapon1.setWidth(gunListWidth);
+        weapon1.setHeight(gunListHeight);
+        weapon1.setPosition(leftMargin,heightW1);
+        app.getGuiNode().attachChild(weapon1);
+        //Text weapon 1
+        BitmapText weapon1Text = new BitmapText(guiFont, false);
+        weapon1Text.setText("Rocket"); // crosshairs
+        weapon1Text.setLocalTranslation(leftMargin+textLeftMargin,heightW1  , 0);
+        app.getGuiNode().attachChild(weapon1Text);
+        //*******************************************
+        //Weapon 2
+        float heightW2 = heightW1 - 2* weaponVerticalAlignmentSize;
+        Picture weapon2 = new Picture("Gun2");
+        weapon2.setImage(assetManager, "Interface/Guns/plasma.png", true);
+        weapon2.setWidth(gunListWidth);
+        weapon2.setHeight(gunListHeight);
+        weapon2.setPosition(leftMargin,heightW2);
+        app.getGuiNode().attachChild(weapon2);
+        //Text weapon 1
+        BitmapText weapon2Text = new BitmapText(guiFont, false);
+        weapon2Text.setText("Plasma"); // crosshairs
+        weapon2Text.setLocalTranslation(leftMargin+textLeftMargin,heightW2  , 0);
+        app.getGuiNode().attachChild(weapon2Text);
+        
+        
+        
     }
 
     private void initKeys() {
