@@ -72,14 +72,10 @@ public class InGameState extends AbstractAppState implements ActionListener {
         
         app.setDisplayStatView(false); app.setDisplayFps(false);
 
-        
-        
-        
-        
         float screenWidth = app.getContext().getSettings().getWidth();
         float screenHeight = app.getContext().getSettings().getHeight();
-        float gunListWidth = screenWidth / 10;
-        float gunListHeight= screenHeight/ 10;
+        float weaponListTileWidth = screenWidth / 10;
+        float weaponListTitleHeight= screenHeight/ 10;
         float crossHairWidth = screenWidth / 15;
         float crossHairHeight= screenHeight/ 15;
         float leftMargin = (float)(screenWidth * 0.008);
@@ -99,17 +95,17 @@ public class InGameState extends AbstractAppState implements ActionListener {
         crossHair.setPosition((screenWidth - crossHairWidth) / 2, (screenHeight - crossHairHeight) / 2);
         app.getGuiNode().attachChild(crossHair);
         
-        BitmapText weaponList = new BitmapText(guiFont, false);
-        weaponList.setText("Weapons"); // crosshairs
-        weaponList.setLocalTranslation(leftMargin,topMargin , 0);
-        app.getGuiNode().attachChild(weaponList);
+        BitmapText weaponListTitle = new BitmapText(guiFont, false);
+        weaponListTitle.setText("Weapons"); // crosshairs
+        weaponListTitle.setLocalTranslation(leftMargin,topMargin , 0);
+        app.getGuiNode().attachChild(weaponListTitle);
 
         //Weapon 1
-        float heightW1 = topMargin - topMarginWeaponDiff;
+        float heightW1 = topMargin - weaponListTitle.getHeight() - topMarginWeaponDiff;
         Picture weapon1 = new Picture("Gun");
         weapon1.setImage(assetManager, "Interface/Guns/rocket.png", true);
-        weapon1.setWidth(gunListWidth);
-        weapon1.setHeight(gunListHeight);
+        weapon1.setWidth(weaponListTileWidth);
+        weapon1.setHeight(weaponListTitleHeight);
         weapon1.setPosition(leftMargin,heightW1);
         app.getGuiNode().attachChild(weapon1);
         //Text weapon 1
@@ -122,8 +118,8 @@ public class InGameState extends AbstractAppState implements ActionListener {
         float heightW2 = heightW1 - 2* weaponVerticalAlignmentSize;
         Picture weapon2 = new Picture("Gun2");
         weapon2.setImage(assetManager, "Interface/Guns/plasma.png", true);
-        weapon2.setWidth(gunListWidth);
-        weapon2.setHeight(gunListHeight);
+        weapon2.setWidth(weaponListTileWidth);
+        weapon2.setHeight(weaponListTitleHeight);
         weapon2.setPosition(leftMargin,heightW2);
         app.getGuiNode().attachChild(weapon2);
         //Text weapon 1
