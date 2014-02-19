@@ -83,7 +83,6 @@ public class InGameState extends AbstractAppState implements ActionListener {
         crossHair.setHeight(crossHairHeight);
         crossHair.setPosition((screenWidth - crossHairWidth) / 2, (screenHeight - crossHairHeight) / 2);
         app.getGuiNode().attachChild(crossHair);
-
         BitmapText weaponList = new BitmapText(guiFont, false);
         weaponList.setText("Weapons"); // crosshairs
         weaponList.setLocalTranslation((float)(screenWidth * 0.008), (float)(screenHeight * 0.9), 0);
