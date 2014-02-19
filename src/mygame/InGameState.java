@@ -72,30 +72,39 @@ public class InGameState extends AbstractAppState implements ActionListener {
         
         app.setDisplayStatView(false); app.setDisplayFps(false);
 
-        int screenWidth = app.getContext().getSettings().getWidth();
-        int screenHeight = app.getContext().getSettings().getHeight();
-        int crossHairWidth = screenWidth / 15;
-        int crossHairHeight= screenHeight/ 15;
-
+        
+        
+        
+        
+        float screenWidth = app.getContext().getSettings().getWidth();
+        float screenHeight = app.getContext().getSettings().getHeight();
+        float gunListWidth = screenWidth / 10;
+        float gunListHeight= screenHeight/ 10;
+        float crossHairWidth = screenWidth / 15;
+        float crossHairHeight= screenHeight/ 15;
+        float leftMargin = (float)(screenWidth * 0.008);
+        float topMargin = (float)(screenHeight * 0.9);
+        float verticalAlignmentSize = (float)(screenWidth * 0.1);
+        float horizontalAlignmentSize = (float)(screenHeight * 0.05);
+        
+        
         Picture crossHair = new Picture("CorssHair");
         crossHair.setImage(assetManager, "Interface/CrossHairs/circle-02-whole.png", true);
         crossHair.setWidth(crossHairWidth);
         crossHair.setHeight(crossHairHeight);
         crossHair.setPosition((screenWidth - crossHairWidth) / 2, (screenHeight - crossHairHeight) / 2);
         app.getGuiNode().attachChild(crossHair);
+        
         BitmapText weaponList = new BitmapText(guiFont, false);
         weaponList.setText("Weapons"); // crosshairs
-        weaponList.setLocalTranslation((float)(screenWidth * 0.008), (float)(screenHeight * 0.9), 0);
+        weaponList.setLocalTranslation(leftMargin,topMargin , 0);
         app.getGuiNode().attachChild(weaponList);
-
-        int gunWidth = screenWidth / 10;
-        int gunHeight= screenHeight/ 10;
 
         Picture gun = new Picture("Gun");
         gun.setImage(assetManager, "Interface/Guns/rocket.png", true);
-        gun.setWidth(gunWidth);
-        gun.setHeight(gunHeight);
-        gun.setPosition((screenWidth - gunWidth) / 2, (screenHeight - gunHeight) / 2);
+        gun.setWidth(gunListWidth);
+        gun.setHeight(gunListHeight);
+        gun.setPosition(leftMargin,topMargin - 1* verticalAlignmentSize);
         app.getGuiNode().attachChild(gun);
     }
 
