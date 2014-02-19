@@ -1,13 +1,14 @@
 package mygame;
 
 import com.jme3.app.Application;
+import com.jme3.app.SimpleApplication;
 import com.jme3.audio.AudioNode;
 import com.jme3.math.Vector3f;
 import com.jme3.scene.Node;
 
 public class Weapon {
 
-    Application app;
+    SimpleApplication app;
     Node rootNode;
     private Node weaponNode;
     private FireBehaviour fireBehaviour;
@@ -32,9 +33,9 @@ public class Weapon {
 //        this.bulletAppState = bulletAppState;
 //        this.bulletCount = bulletCount;
 //    }
-    public Weapon(Application app, Node rootNode, int bulletCount, BulletBuilder bulletCreator, FireBehaviour fireBehaviour, String fireSound) {// fireSound should be mono
+    public Weapon(Application app, int bulletCount, BulletBuilder bulletCreator, FireBehaviour fireBehaviour, String fireSound) {// fireSound should be mono
 
-        this.app = app;
+        this.app = (SimpleApplication)app;
         this.rootNode = rootNode;
         this.bulletCount = bulletCount;
         this.bulletCreator = bulletCreator;

@@ -28,6 +28,7 @@ public class InGameState extends AbstractAppState implements ActionListener {
     private InputManager inputManager;
     private BitmapFont guiFont;
     private Tank tank1;
+    private Tank tank2;
     private Weapon testWeapon;
 
     @Override
@@ -40,25 +41,24 @@ public class InGameState extends AbstractAppState implements ActionListener {
         this.inputManager = this.app.getInputManager();
         this.guiFont = this.assetManager.loadFont("Interface/Fonts/Default.fnt");
 
-        initTank();
         initWeapon();
+        initTank();
         initKeys();
         initCrossHairs();
     }
 
     private void initTank() {
-
+        //build the tank
         tank1 = new Tank(this.app);
-
+        
+        //add necessary weapons to tank
+        tank1.addWeapon(testWeapon);
+        
     }
 
     private void initWeapon() {
-//        //build all weapons 
-//        testWeapon = new Weapon(app, rootNode, 200, new BulletCreatorSimple(this.app), new FireBehaviourSimple(this.app, rootNode), "Sounds/weapon1.wav");
-//
-//        //attach needed weapons to tank
-//        tank1.addWeapon(testWeapon);
-//      
+        //build all weapons 
+        testWeapon = new Weapon(app, 200, new SimpleBulletBuilder(this.app), new FireBehaviourSimple(this.app, rootNode), "Sounds/weapon1.wav");
     }
 
     @Override
@@ -67,11 +67,11 @@ public class InGameState extends AbstractAppState implements ActionListener {
 
     }
 
-    //also init gun shape
     protected void initCrossHairs() {
         
+        
         app.setDisplayStatView(false); app.setDisplayFps(false);
-
+        
         
         
         
@@ -90,8 +90,8 @@ public class InGameState extends AbstractAppState implements ActionListener {
         float textHorizontalAlignmentSize = (float)(screenWidth * 0.02);
         float textLeftMargin = (float)(leftMargin + (leftMargin*0.2));
         float topMarginWeaponDiff = (float)(1.5 * (screenHeight - topMargin)); /// 2;
-                
-                
+        
+        
         Picture crossHair = new Picture("CorssHair");
         crossHair.setImage(assetManager, "Interface/CrossHairs/circle-02-whole.png", true);
         crossHair.setWidth(crossHairWidth);
@@ -103,7 +103,7 @@ public class InGameState extends AbstractAppState implements ActionListener {
         weaponList.setText("Weapons"); // crosshairs
         weaponList.setLocalTranslation(leftMargin,topMargin , 0);
         app.getGuiNode().attachChild(weaponList);
-
+        
         //Weapon 1
         float heightW1 = topMargin - topMarginWeaponDiff;
         Picture weapon1 = new Picture("Gun");
@@ -131,6 +131,7 @@ public class InGameState extends AbstractAppState implements ActionListener {
         weapon2Text.setText("Plasma"); // crosshairs
         weapon2Text.setLocalTranslation(leftMargin+textLeftMargin,heightW2  , 0);
         app.getGuiNode().attachChild(weapon2Text);
+        
         
         
         
