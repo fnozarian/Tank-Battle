@@ -13,6 +13,7 @@ import com.jme3.input.controls.ActionListener;
 import com.jme3.input.controls.KeyTrigger;
 import com.jme3.math.Vector3f;
 import com.jme3.scene.Node;
+import com.jme3.ui.Picture;
 
 /**
  *
@@ -52,17 +53,12 @@ public class InGameState extends AbstractAppState implements ActionListener {
     }
 
     private void initWeapon() {
-
-
 //        //build all weapons 
 //        testWeapon = new Weapon(app, rootNode, 200, new BulletCreatorSimple(this.app), new FireBehaviourSimple(this.app, rootNode), "Sounds/weapon1.wav");
 //
 //        //attach needed weapons to tank
 //        tank1.addWeapon(testWeapon);
 //      
-
-
-        
     }
 
     @Override
@@ -71,16 +67,37 @@ public class InGameState extends AbstractAppState implements ActionListener {
 
     }
 
+    //also init gun shape
     protected void initCrossHairs() {
+        
+        app.setDisplayStatView(false); app.setDisplayFps(false);
 
-        guiFont = assetManager.loadFont("Interface/Fonts/Default.fnt");
-        BitmapText ch = new BitmapText(guiFont, false);
-        ch.setSize(guiFont.getCharSet().getRenderedSize() * 2);
-        ch.setText("+"); // crosshairs
-        ch.setLocalTranslation( // center
-                app.getContext().getSettings().getWidth() / 2 - guiFont.getCharSet().getRenderedSize() / 3 * 2,
-                app.getContext().getSettings().getHeight() / 2 + ch.getLineHeight() / 2, 0);
-        app.getGuiNode().attachChild(ch);
+        int screenWidth = app.getContext().getSettings().getWidth();
+        int screenHeight = app.getContext().getSettings().getHeight();
+        int crossHairWidth = screenWidth / 15;
+        int crossHairHeight= screenHeight/ 15;
+
+        Picture crossHair = new Picture("CorssHair");
+        crossHair.setImage(assetManager, "Interface/CrossHairs/circle-02-whole.png", true);
+        crossHair.setWidth(crossHairWidth);
+        crossHair.setHeight(crossHairHeight);
+        crossHair.setPosition((screenWidth - crossHairWidth) / 2, (screenHeight - crossHairHeight) / 2);
+        app.getGuiNode().attachChild(crossHair);
+
+        BitmapText weaponList = new BitmapText(guiFont, false);
+        weaponList.setText("Weapons"); // crosshairs
+        weaponList.setLocalTranslation((float)(screenWidth * 0.008), (float)(screenHeight * 0.9), 0);
+        app.getGuiNode().attachChild(weaponList);
+
+        int gunWidth = screenWidth / 10;
+        int gunHeight= screenHeight/ 10;
+
+        Picture gun = new Picture("Gun");
+        gun.setImage(assetManager, "Interface/Guns/rocket.png", true);
+        gun.setWidth(gunWidth);
+        gun.setHeight(gunHeight);
+        gun.setPosition((screenWidth - gunWidth) / 2, (screenHeight - gunHeight) / 2);
+        app.getGuiNode().attachChild(gun);
     }
 
     private void initKeys() {

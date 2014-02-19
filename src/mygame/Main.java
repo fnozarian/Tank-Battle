@@ -14,7 +14,7 @@ import de.lessvoid.nifty.screen.ScreenController;
 public class Main extends SimpleApplication {
 
     private AbstractAppState inGameState;
-    private ScreenController startScreenControler;
+    
     private BulletAppState bulletAppState;
     private BasicShadowRenderer bsr;
     private float steeringValue = 0;
@@ -33,11 +33,7 @@ public class Main extends SimpleApplication {
         bulletAppState.setThreadingType(BulletAppState.ThreadingType.PARALLEL);
         inGameState = new InGameState();
 
-        startScreenControler = new StartScreenState(this);
-        NiftyJmeDisplay display = new NiftyJmeDisplay(assetManager, inputManager, audioRenderer, viewPort); //create jme-nifty-processor
-        guiViewPort.addProcessor(display); //add it to your gui-viewport so that the processor will start working
-        Nifty nifty = display.getNifty();
-        nifty.fromXml("Interface/Start.xml", "hud", startScreenControler);
+        
 
 
 
@@ -66,7 +62,7 @@ public class Main extends SimpleApplication {
         flyCam.setEnabled(false);
 
         stateManager.attach(inGameState);
-        stateManager.attach((AbstractAppState)startScreenControler);
+        
 
     }
 
