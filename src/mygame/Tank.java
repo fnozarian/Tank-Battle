@@ -50,6 +50,7 @@ public class Tank {
 
         //initialize members
         weapons = new ArrayList<Weapon>();
+        int health =100;
 
 
         //Configuring Model
@@ -97,7 +98,12 @@ public class Tank {
 
     public void fire() {
         Vector3f fireDirection = tankNode.getWorldRotation().getRotationColumn(2);
-        activeWeapon.fire(fireDirection);
+        try {
+            activeWeapon.fire(fireDirection);
+        } catch (Exception e) {
+            System.err.println("no activeWeapon found!");
+        }
+        
     }
 
     public void switchWeapon(Weapon weapon) {
@@ -119,7 +125,7 @@ public class Tank {
      * Reset the place of tank to it's initial state
      */
     public void resetTank() {
-        vehicleControl.setPhysicsLocation(new Vector3f(-140, 14, -23));
+        vehicleControl.setPhysicsLocation(new Vector3f(-140, 14, -23));// inja kojas? :D miofte pain 
         vehicleControl.setPhysicsRotation(new Matrix3f());
         vehicleControl.clearForces();
     }
@@ -158,4 +164,5 @@ public class Tank {
     private PhysicsSpace getPhysicsSpace() {
         return this.app.getStateManager().getState(BulletAppState.class).getPhysicsSpace();
     }
+    
 }
