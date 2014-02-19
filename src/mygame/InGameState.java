@@ -11,6 +11,7 @@ import com.jme3.input.InputManager;
 import com.jme3.input.KeyInput;
 import com.jme3.input.controls.ActionListener;
 import com.jme3.input.controls.KeyTrigger;
+import com.jme3.math.Quaternion;
 import com.jme3.math.Vector3f;
 import com.jme3.scene.Node;
 import com.jme3.ui.Picture;
@@ -41,25 +42,26 @@ public class InGameState extends AbstractAppState implements ActionListener {
         this.inputManager = this.app.getInputManager();
         this.guiFont = this.assetManager.loadFont("Interface/Fonts/Default.fnt");
 
-        initTank();
         initWeapon();
+        initTank();
         initKeys();
         initCrossHairs();
     }
 
     private void initTank() {
-
+        //build the tank
         tank1 = new Tank(this.app);
+
+        tank1.setAsPlayer();
+        tank1.attachToWorld(new Vector3f(200,200,200),new Quaternion(new float[]{0, 0.01f, 0}));
+        //add necessary weapons to tank
+        tank1.addWeapon(testWeapon);
         
     }
 
     private void initWeapon() {
-//        //build all weapons 
-//        testWeapon = new Weapon(app, rootNode, 200, new BulletCreatorSimple(this.app), new FireBehaviourSimple(this.app, rootNode), "Sounds/weapon1.wav");
-//
-//        //attach needed weapons to tank
-//        tank1.addWeapon(testWeapon);
-//      
+        //build all weapons 
+        testWeapon = new Weapon(app, 200, new SimpleBulletBuilder(this.app), new FireBehaviourSimple(this.app, rootNode), "Sounds/weapon1.wav");
     }
 
     @Override
