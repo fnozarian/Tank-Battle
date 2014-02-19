@@ -20,11 +20,7 @@ import com.jme3.scene.Spatial;
 
 public class Tank {
 
-    private PhysicsHoverControl vehicleControl;
 
-    public void setVehicleControl(PhysicsHoverControl vehicleControl) {
-        this.vehicleControl = vehicleControl;
-    }
     private final float accelerationForce = 1000.0f;
     private final float brakeForce = 100.0f;
     private float steeringValue = 0;
@@ -42,6 +38,7 @@ public class Tank {
     private Spatial tankBody;
     private CameraNode camNode;
     private SimpleApplication app;
+    private PhysicsHoverControl vehicleControl;
 
     public Tank(Application app) {
 
@@ -57,17 +54,9 @@ public class Tank {
         tankBody = this.app.getAssetManager().loadModel("Models/HoverTank/Tank2.mesh.xml");
         colShape = CollisionShapeFactory.createDynamicMeshShape(tankBody);
         tankBody.setShadowMode(RenderQueue.ShadowMode.CastAndReceive);
-        tankBody.setLocalTranslation(new Vector3f(0, 0, 0));///-60, 14, -23
-        tankBody.setLocalRotation(new Quaternion(new float[]{0, 0.01f, 0}));
+        //tankBody.setLocalTranslation(new Vector3f(0, 0, 0));///-60, 14, -23
+        
         tankNode.attachChild(tankBody);
-
-
-        //Configuring camera
-        camNode = new CameraNode("camNode", this.app.getCamera());
-        //Setting the direction to Spatial to camera, this means the camera will copy the movements of the Node
-        camNode.setControlDir(CameraControl.ControlDirection.SpatialToCamera);
-        camNode.setLocalTranslation(0f, 4f, -12f);
-        tankNode.attachChild(camNode);
 
         //Configuring vehicle control
         vehicleControl = new PhysicsHoverControl(colShape, 500);
@@ -79,10 +68,14 @@ public class Tank {
         tankIdleSound.setLooping(true);
         tankNode.attachChild(tankIdleSound);
         tankIdleSound.play();
-
-        //Adding to screen
-        this.app.getRootNode().attachChild(tankNode);
-        getPhysicsSpace().add(tankNode);
+    }
+    void setAsPlayer(){
+        //Configuring camera
+        camNode = new CameraNode("camNode", this.app.getCamera());
+        //Setting the direction to Spatial to camera, this means the camera will copy the movements of the Node
+        camNode.setControlDir(CameraControl.ControlDirection.SpatialToCamera);
+        camNode.setLocalTranslation(0f, 4f, -12f);
+        tankNode.attachChild(camNode);
     }
 
     void accelerate(float force) {
@@ -158,11 +151,22 @@ public class Tank {
 
     }
 
-    public void attachToWorld(Node rooNode) {
+    public void attachToWorld(Vector3f location, Quaternion direction) {
+                //Adding to screen
+       
+        //tankNode.setLocalRotation(Matrix3f.ZERO);
+        tankNode.setLocalTranslation(location);
+        tankNode.setLocalRotation(direction);
+        app.getRootNode().attachChild(tankNode);
+        getPhysicsSpace().add(tankNode);
+         
     }
 
     private PhysicsSpace getPhysicsSpace() {
         return this.app.getStateManager().getState(BulletAppState.class).getPhysicsSpace();
+    }
+    public void setVehicleControl(PhysicsHoverControl vehicleControl) {
+        this.vehicleControl = vehicleControl;
     }
     
 }

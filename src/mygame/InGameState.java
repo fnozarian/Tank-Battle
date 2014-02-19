@@ -28,6 +28,7 @@ public class InGameState extends AbstractAppState implements ActionListener {
     private InputManager inputManager;
     private BitmapFont guiFont;
     private Tank tank1;
+    private Tank tank2;
     private Weapon testWeapon;
 
     @Override
@@ -49,7 +50,7 @@ public class InGameState extends AbstractAppState implements ActionListener {
     private void initTank() {
 
         tank1 = new Tank(this.app);
-
+        
     }
 
     private void initWeapon() {
@@ -86,8 +87,8 @@ public class InGameState extends AbstractAppState implements ActionListener {
         float textHorizontalAlignmentSize = (float)(screenWidth * 0.02);
         float textLeftMargin = (float)(leftMargin + (leftMargin*0.2));
         float topMarginWeaponDiff = (float)(1.5 * (screenHeight - topMargin)); /// 2;
-                
-                
+        
+        
         Picture crossHair = new Picture("CorssHair");
         crossHair.setImage(assetManager, "Interface/CrossHairs/circle-02-whole.png", true);
         crossHair.setWidth(crossHairWidth);

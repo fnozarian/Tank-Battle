@@ -14,7 +14,6 @@ import com.jme3.scene.Mesh;
 public abstract class BulletBuilder {
     
     protected Bullet bullet;
-    
     protected Mesh mesh;
     protected Material material;
     protected int power;
@@ -31,9 +30,10 @@ public abstract class BulletBuilder {
 
     public BulletBuilder(Application app) {
         this.app = app;
+       initMesh();
+       initMaterial();
+       initPower();
     }
-    
-
     //All non-shareable thing goes here
     final Bullet buildBullet(Vector3f velocityDirection) {
         
