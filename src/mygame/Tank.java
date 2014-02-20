@@ -142,7 +142,7 @@ public class Tank {
             activeWeapon = weapon;
         }
         //set translation of weapon related to tank
-        weapon.getWeaponNode().setLocalTranslation((new Vector3f(0, 2f, 6.52f)));
+        weapon.getWeaponNode().setLocalTranslation((new Vector3f(0, 2f, 8f)));
         //do something in game e.g show a gun in w
     }
 
