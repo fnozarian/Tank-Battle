@@ -102,7 +102,7 @@ public class Tank {
         Vector3f fireDirection = tankNode.getWorldRotation().getRotationColumn(2);
         fireDirection.setY(-0.024F);
         try {
-            activeWeapon.fire(fireDirection);
+            getActiveWeapon().fire(fireDirection);
         } catch (Exception e) {
             System.err.println("no activeWeapon found!");
         }
@@ -110,7 +110,7 @@ public class Tank {
     }
 
     public void switchWeapon(Weapon weapon) {
-        activeWeapon = weapons.get(weapons.indexOf(weapon));
+        activeWeapon = getWeapons().get(getWeapons().indexOf(weapon));
     }
 
     void decreaseHealth(int point) {
@@ -135,10 +135,10 @@ public class Tank {
 
     public void addWeapon(Weapon weapon) {
         //add weapon to tank
-        weapons.add(weapon);
+        getWeapons().add(weapon);
         tankNode.attachChild(weapon.getWeaponNode());
         //handle activeWeapon
-        if (weapons.size() == 1) {
+        if (getWeapons().size() == 1) {
             activeWeapon = weapon;
         }
         //set translation of weapon related to tank
@@ -148,15 +148,15 @@ public class Tank {
 
     public void removeWeapon(Weapon weapon) {
         //handle activeWeapon
-        if (activeWeapon.equals(weapon)) {
-            if (weapons.size() == 1) {
+        if (getActiveWeapon().equals(weapon)) {
+            if (getWeapons().size() == 1) {
                 activeWeapon = null;
             } else {
-                activeWeapon = weapons.get(0);
+                activeWeapon = getWeapons().get(0);
             }
         }
         //remove weapon from tank
-        weapons.remove(weapon);
+        getWeapons().remove(weapon);
         tankNode.detachChild(weapon.getWeaponNode());
 
     }
@@ -176,6 +176,20 @@ public class Tank {
     }
     public void setVehicleControl(PhysicsHoverControl vehicleControl) {
         this.vehicleControl = vehicleControl;
+    }
+
+    /**
+     * @return the weapons
+     */
+    public ArrayList<Weapon> getWeapons() {
+        return weapons;
+    }
+
+    /**
+     * @return the activeWeapon
+     */
+    public Weapon getActiveWeapon() {
+        return activeWeapon;
     }
     
 }

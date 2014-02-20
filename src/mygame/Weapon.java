@@ -13,14 +13,17 @@ import java.util.Properties;
 
 public class Weapon {
 
+    private GameConfigurations confs;
+    private Node rootNode;
     private SimpleApplication app;
-    private Node weaponNode;
     private FireBehaviour fireBehaviour;
     private BulletBuilder bulletCreator;
     private int bulletCount;
-    private AudioNode sound;
-    private GameConfigurations confs;
-    private Node rootNode;
+    private Node weaponNode;
+    private AudioNode weaponSound;
+    private Picture weaponThumb;
+    private String weaponName;
+    private Picture crossHair;
     
     public void setFireBehaviour(FireBehaviour fireBehaviour) {
         this.fireBehaviour = fireBehaviour;
@@ -30,15 +33,6 @@ public class Weapon {
         this.bulletCreator = bulletCreator;
     }
 
-    //AudioNode sound;
-    //   private Node weaponNode;
-//    public Weapon(AssetManager assetManager, Node rootNode, BulletAppState bulletAppState, int bulletCount) {
-//        //       sound = new AudioNode(assetManager,"Sounds/weapon1.wav",false);
-//        this.assetManager = assetManager;
-//        this.rootNode = rootNode;
-//        this.bulletAppState = bulletAppState;
-//        this.bulletCount = bulletCount;
-//    }
     public Weapon(Application app, int bulletCount, BulletBuilder bulletCreator, FireBehaviour fireBehaviour, String fireSound) {// fireSound should be mono
         confs = GameConfigurations.getInstance(app);
         
@@ -47,10 +41,10 @@ public class Weapon {
         this.bulletCount = bulletCount;
         this.bulletCreator = bulletCreator;
         this.fireBehaviour = fireBehaviour;
-        sound = new AudioNode(app.getAssetManager(), fireSound, false);
-        sound.setPositional(true);
+        weaponSound = new AudioNode(app.getAssetManager(), fireSound, false);
+        weaponSound.setPositional(true);
         weaponNode = new Node();
-        weaponNode.attachChild(sound);
+        weaponNode.attachChild(weaponSound);
 
     }
     /**
@@ -61,7 +55,7 @@ public class Weapon {
         if (bulletCount != 0) {
             fireBehaviour.fire(weaponNode.getWorldTranslation(), fireDirection, bulletCreator);
             bulletCount--;
-            sound.play();
+            weaponSound.play();
         } else {
             noBullet();
         }
@@ -82,66 +76,28 @@ public class Weapon {
     public Node getWeaponNode() {
         return weaponNode;
     }
-    
-    protected void initCrossHairs() {
-        
-        float crossHairWidth = tof("crossHairWidth");
-        float crossHairHeight= tof("crossHairHeight");
-        float screenWidth = tof("screenWidth");
-        float screenHeight = tof("screenHeight");
-        float leftMargin = tof("leftMargin");
-        float topMargin = tof("topMargin");
-        float topMarginWeaponDiff = tof("topMarginWeaponDiff");
-        float weaponListTileWidth = tof("weaponListTileWidth");
-        float weaponListTitleHeight = tof("weaponListTitleHeight");
-        float textLeftMargin = tof("textLeftMargin");
-        float weaponVerticalAlignmentSize = tof("weaponVerticalAlignmentSize");
-        
-        Picture crossHair = new Picture("CorssHair");
-        crossHair.setImage(app.getAssetManager(), "Interface/CrossHairs/circle-02-whole.png", true);
-        crossHair.setWidth(crossHairWidth);
-        crossHair.setHeight(crossHairHeight);
-        crossHair.setPosition((screenWidth - crossHairWidth) / 2, (screenHeight - crossHairHeight) / 2);
-        app.getGuiNode().attachChild(crossHair);
-        
-        BitmapText weaponListTitle = new BitmapText(app.getAssetManager().loadFont("Interface/Fonts/Default.fnt"), false);
-        weaponListTitle.setText("Weapons"); // crosshairs
-        weaponListTitle.setLocalTranslation(leftMargin,topMargin , 0);
-        app.getGuiNode().attachChild(weaponListTitle);
 
-        //Weapon 1
-        float heightW1 = topMargin - weaponListTitle.getHeight() - topMarginWeaponDiff;
-        Picture weapon1 = new Picture("Gun");
-        weapon1.setImage(app.getAssetManager(), "Interface/Guns/rocket.png", true);
-        weapon1.setWidth(weaponListTileWidth);
-        weapon1.setHeight(weaponListTitleHeight);
-        weapon1.setPosition(leftMargin,heightW1);
-        app.getGuiNode().attachChild(weapon1);
-        //Text weapon 1
-        BitmapText weapon1Text = new BitmapText(app.getAssetManager().loadFont("Interface/Fonts/Default.fnt"), false);
-        weapon1Text.setText("Rocket"); // crosshairs
-        weapon1Text.setLocalTranslation(leftMargin+textLeftMargin,heightW1  , 0);
-        app.getGuiNode().attachChild(weapon1Text);
-        //*******************************************
-        //Weapon 2
-        float heightW2 = heightW1 - 2* weaponVerticalAlignmentSize;
-        Picture weapon2 = new Picture("Gun2");
-        weapon2.setImage(app.getAssetManager(), "Interface/Guns/plasma.png", true);
-        weapon2.setWidth(weaponListTileWidth);
-        weapon2.setHeight(weaponListTitleHeight);
-        weapon2.setPosition(leftMargin,heightW2);
-        app.getGuiNode().attachChild(weapon2);
-        //Text weapon 1
-        BitmapText weapon2Text = new BitmapText(app.getAssetManager().loadFont("Interface/Fonts/Default.fnt"), false);
-        weapon2Text.setText("Plasma"); // crosshairs
-        weapon2Text.setLocalTranslation(leftMargin+textLeftMargin,heightW2  , 0);
-        app.getGuiNode().attachChild(weapon2Text);
-        
-        
-        
+    /**
+     * @return the weaponThumb
+     */
+    public Picture getWeaponThumb() {
+        return weaponThumb;
     }
-    private float tof(String floatStringKey){
-        return Float.parseFloat(confs.getProperty(floatStringKey).toString());
+
+    /**
+     * @return the weaponName
+     */
+    public String getWeaponName() {
+        return weaponName;
     }
+
+    /**
+     * @return the crossHair
+     */
+    public Picture getCrossHair() {
+        return crossHair;
+    }
+    
+    
 }
 

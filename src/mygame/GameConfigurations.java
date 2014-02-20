@@ -54,7 +54,9 @@ public class GameConfigurations {
         float textHorizontalAlignmentSize = (float) (screenWidth * 0.02);
         float textLeftMargin = (float) (leftMargin + (leftMargin * 0.2));
         float topMarginWeaponDiff = (float) (1.5 * (screenHeight - topMargin));
-
+        float crossHairX = ((screenWidth - crossHairWidth) / 2);
+        float crossHairY = ((screenHeight - crossHairHeight) / 2 );
+        
         //Sotring to defaultProp
         defaultProp.setProperty("screenWidth", toString(screenWidth));
         defaultProp.setProperty("screenHeight", toString(screenHeight));
@@ -70,7 +72,9 @@ public class GameConfigurations {
         defaultProp.setProperty("textHorizontalAlignmentSize", toString(textHorizontalAlignmentSize));
         defaultProp.setProperty("textLeftMargin", toString(textLeftMargin));
         defaultProp.setProperty("topMarginWeaponDiff", toString(topMarginWeaponDiff));
-
+        defaultProp.setProperty("crossHairX", toString(crossHairX));
+        defaultProp.setProperty("crossHairY", toString(crossHairY));
+        
         defaultProp.setProperty("displayStateView", toString(false));
         defaultProp.setProperty("displayFps", toString(false));
 
