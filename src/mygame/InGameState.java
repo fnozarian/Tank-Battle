@@ -51,14 +51,15 @@ public class InGameState extends AbstractAppState implements ActionListener {
 
     private void initTank() {
         //build the tank
-      
+      //build tank(S)
+        tank1 = new Tank(this.app,new Vector3f(0,0,0),new Quaternion(new float[]{0, 0.01f, 0}));
+        tank2 = new Tank(this.app,new Vector3f(0,0,40),new Quaternion(new float[]{0, 1.5f, 0}));
+        
         tank1.setAsPlayer();
         tank1.attachToWorld(new Vector3f(200,200,200),new Quaternion(new float[]{0, 0.01f, 0}));
         //add necessary weapons to tank
 
-        //build tank(S)
-        tank1 = new Tank(this.app,new Vector3f(0,0,0),new Quaternion(new float[]{0, 0.01f, 0}));
-        tank2 = new Tank(this.app,new Vector3f(0,0,40),new Quaternion(new float[]{0, 1.5f, 0}));
+        
         
         //add necessary weapons to tank(S)
 
