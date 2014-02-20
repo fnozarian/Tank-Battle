@@ -50,8 +50,8 @@ public class SimpleBulletBuilder extends BulletBuilder {
     @Override
     protected void buildBulletControl(Vector3f velocityDirection) {
         SphereCollisionShape bulletCollisionShape = new SphereCollisionShape(0.4f);
-        bulletControl = new BombControl(app.getAssetManager(), bulletCollisionShape, 0.001f);
-        bulletControl.setLinearVelocity((velocityDirection).mult(355));
+        bulletControl = new BombControl(app.getAssetManager(), bulletCollisionShape, 10f);
+        bulletControl.setLinearVelocity((velocityDirection).mult(350));
         app.getStateManager().getState(BulletAppState.class).getPhysicsSpace().add(bulletControl);
     }
 }

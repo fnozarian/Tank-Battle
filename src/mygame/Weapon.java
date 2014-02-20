@@ -42,6 +42,7 @@ public class Weapon {
         confs = GameConfigurations.getInstance(app);
         
         this.app = (SimpleApplication)app;
+        this.rootNode = this.app.getRootNode();
         this.bulletCount = bulletCount;
         this.bulletCreator = bulletCreator;
         this.fireBehaviour = fireBehaviour;

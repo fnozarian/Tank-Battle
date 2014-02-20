@@ -15,6 +15,7 @@ import com.jme3.scene.CameraNode;
 import com.jme3.scene.Node;
 import com.jme3.scene.control.CameraControl;
 import com.jme3.bullet.collision.shapes.CollisionShape;
+import com.jme3.bullet.control.RigidBodyControl;
 import com.jme3.math.Matrix3f;
 import com.jme3.scene.Spatial;
 
@@ -40,13 +41,13 @@ public class Tank {
     private SimpleApplication app;
     private PhysicsHoverControl vehicleControl;
 
-    public Tank(Application app) {
+    public Tank(Application app,Vector3f location,Quaternion direction) {
 
         this.app = (SimpleApplication) app;
         tankNode = new Node();
         
-        tankNode.setLocalTranslation(new Vector3f(10,10,10));
-        tankNode.setLocalRotation(new Quaternion(new float[]{0, 0.01f, 0}));
+        tankNode.setLocalTranslation(location);
+        tankNode.setLocalRotation(direction);
         //initialize members
         weapons = new ArrayList<Weapon>();
         int health =100;
@@ -56,7 +57,7 @@ public class Tank {
         tankBody = this.app.getAssetManager().loadModel("Models/HoverTank/Tank2.mesh.xml");
         colShape = CollisionShapeFactory.createDynamicMeshShape(tankBody);
         tankBody.setShadowMode(RenderQueue.ShadowMode.CastAndReceive);
-        //tankBody.setLocalTranslation(new Vector3f(0, 0, 0));///-60, 14, -23
+        tankBody.setLocalTranslation(new Vector3f(0, 0, 0));///-60, 14, -23
         
         tankNode.attachChild(tankBody);
 
@@ -70,6 +71,12 @@ public class Tank {
         tankIdleSound.setLooping(true);
         tankNode.attachChild(tankIdleSound);
         tankIdleSound.play();
+
+        
+        //add Tank to scene
+        this.app.getRootNode().attachChild(tankNode);
+        getPhysicsSpace().add(tankNode);
+
     }
     void setAsPlayer(){
         //Configuring camera
@@ -93,6 +100,7 @@ public class Tank {
 
     public void fire() {
         Vector3f fireDirection = tankNode.getWorldRotation().getRotationColumn(2);
+        fireDirection.setY(-0.024F);
         try {
             activeWeapon.fire(fireDirection);
         } catch (Exception e) {
@@ -134,7 +142,7 @@ public class Tank {
             activeWeapon = weapon;
         }
         //set translation of weapon related to tank
-        weapon.getWeaponNode().setLocalTranslation((new Vector3f(0, 4, -2)));
+        weapon.getWeaponNode().setLocalTranslation((new Vector3f(0, 2f, 8f)));
         //do something in game e.g show a gun in w
     }
 
