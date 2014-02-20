@@ -20,6 +20,7 @@ public class Weapon {
     private int bulletCount;
     private AudioNode sound;
     private GameConfigurations confs;
+    private Node rootNode;
     
     public void setFireBehaviour(FireBehaviour fireBehaviour) {
         this.fireBehaviour = fireBehaviour;
