@@ -44,7 +44,9 @@ public class Tank {
 
         this.app = (SimpleApplication) app;
         tankNode = new Node();
-
+        
+        tankNode.setLocalTranslation(new Vector3f(10,10,10));
+        tankNode.setLocalRotation(new Quaternion(new float[]{0, 0.01f, 0}));
         //initialize members
         weapons = new ArrayList<Weapon>();
         int health =100;
@@ -152,11 +154,10 @@ public class Tank {
     }
 
     public void attachToWorld(Vector3f location, Quaternion direction) {
-                //Adding to screen
+        //Adding to screen
        
         //tankNode.setLocalRotation(Matrix3f.ZERO);
-        tankNode.setLocalTranslation(location);
-        tankNode.setLocalRotation(direction);
+        
         app.getRootNode().attachChild(tankNode);
         getPhysicsSpace().add(tankNode);
          
