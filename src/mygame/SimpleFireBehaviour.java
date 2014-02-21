@@ -8,14 +8,14 @@ import com.jme3.scene.Node;
  *
  * @author vahid
  */
-public class FireBehaviourSimple extends FireBehaviour {
+public class SimpleFireBehaviour extends FireBehaviour {
 
-    public FireBehaviourSimple(Application app) {
-        super(app);
+    public SimpleFireBehaviour(Application app, Node rootNode) {
+        super(app, rootNode);
     }
 
     @Override
-    public void fire(Vector3f location, Vector3f direction,BulletBuilder bulletCreator) {
+    public void fire(Vector3f location, Vector3f direction,BulletBuilder bulletCreator,Weapon weapon) {
         Bullet b = bulletCreator.buildBullet(direction);
         b.setLocalTranslation(location);
         b.addControl();
@@ -23,5 +23,10 @@ public class FireBehaviourSimple extends FireBehaviour {
 
         
 
+    }
+
+    @Override
+    public void initbulletsPerFire() {
+        bulletsPerFire = 1;
     }
 }

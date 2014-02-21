@@ -24,7 +24,7 @@ public abstract class Weapon {
     
     public Weapon(Application app) { // This is Templete Method that shows a skeleton of weapon creation process!
         this.app = (SimpleApplication) app;
-        
+
         confs = GameConfigurations.getInstance(app);//Singleton Pattern
         preInitWeapon(); // defer some settings to subclasses, with this we force 
         bulletCreator = makeBulletBuilder(); // this is Factory Method thath defer instanciation to weapon subclasses
