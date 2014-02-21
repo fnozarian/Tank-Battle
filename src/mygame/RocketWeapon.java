@@ -29,7 +29,7 @@ public class RocketWeapon extends Weapon{
         crossHair = new Picture(weaponName);
         crossHair.setImage(app.getAssetManager(), confs.getProperty("rocketCrossHairPath").toString(), true);
         bulletCount = Integer.parseInt(confs.getProperty("rocketBulletCount").toString());
-        fireBehaviourLeft = new FireBehaviourSimple(app);
+        fireBehaviourLeft = new SimpleFireBehaviour(app);
     }
 
     @Override

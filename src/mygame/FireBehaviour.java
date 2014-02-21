@@ -13,18 +13,7 @@ public abstract class FireBehaviour {
     public FireBehaviour(Application app) {
         this.app = (SimpleApplication) app;
         this.rootNode = this.app.getRootNode();
-
-        int bulletsPerFire;
-    
-
-    public FireBehaviour(Application app, Node rootNode) {
-
-        this.app = app;
-        this.rootNode = rootNode;
-        initbulletsPerFire();
     }
 
-    public abstract void fire(Vector3f location, Vector3f direction, BulletBuilder bulletCreator, Weapon weapon);
-
-    public abstract void initbulletsPerFire();
+    public abstract void fire(Vector3f location, Vector3f direction, BulletBuilder bulletCreator);
 }
