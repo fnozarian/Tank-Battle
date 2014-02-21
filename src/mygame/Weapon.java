@@ -17,7 +17,7 @@ public class Weapon {
     private Node rootNode;
     private SimpleApplication app;
     private FireBehaviour fireBehaviour;
-    private BulletBuilder bulletCreator;
+    private BulletBuilder bulletBuilder;
     private int bulletCount;
     private Node weaponNode;
     private AudioNode weaponSound;
@@ -29,8 +29,8 @@ public class Weapon {
         this.fireBehaviour = fireBehaviour;
     }
 
-    public void setBulletCreator(BulletBuilder bulletCreator) {
-        this.bulletCreator = bulletCreator;
+    public void setBulletCreator(BulletBuilder bulletBuilder) {
+        this.bulletBuilder = bulletBuilder;
     }
 
     public Weapon(Application app, int bulletCount, BulletBuilder bulletCreator, FireBehaviour fireBehaviour, String fireSound) {// fireSound should be mono
@@ -39,7 +39,7 @@ public class Weapon {
         this.app = (SimpleApplication)app;
         this.rootNode = this.app.getRootNode();
         this.bulletCount = bulletCount;
-        this.bulletCreator = bulletCreator;
+        this.bulletBuilder = bulletCreator;
         this.fireBehaviour = fireBehaviour;
         weaponSound = new AudioNode(app.getAssetManager(), fireSound, false);
         weaponSound.setPositional(true);
@@ -53,8 +53,8 @@ public class Weapon {
      */
     public void fire(Vector3f fireDirection) {
         if (bulletCount != 0) {
-            fireBehaviour.fire(weaponNode.getWorldTranslation(), fireDirection, bulletCreator);
-            bulletCount--;
+            fireBehaviour.fire(weaponNode.getWorldTranslation(), fireDirection, bulletBuilder,this);
+           // bulletCount--;
             weaponSound.play();
         } else {
             noBullet();

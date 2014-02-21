@@ -8,13 +8,17 @@ public abstract class FireBehaviour {
 
     protected Application app;
     protected Node rootNode;
-
+    int bulletsPerFire;
     public FireBehaviour(Application app, Node rootNode) {
 
         this.app = app;
         this.rootNode = rootNode;
-        
+        initbulletsPerFire();
     }
 
-    public abstract void fire(Vector3f location, Vector3f direction, BulletBuilder bulletCreator);
+    public abstract void fire(Vector3f location, Vector3f direction, BulletBuilder bulletCreator,Weapon weapon);
+    public abstract void initbulletsPerFire();
+
+    
+    
 }
