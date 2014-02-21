@@ -75,7 +75,6 @@ public class HUDState extends AbstractAppState {
 
             //Draw each weapon thumb
             weaponThumb = weapon.getWeaponThumb();
-            //weaponThumb.setImage(app.getAssetManager(), "Interface/Guns/rocket.png", true);
             weaponThumb.setWidth(weaponListTileWidth);
             weaponThumb.setHeight(weaponListTitleHeight);
             weaponThumb.setPosition(leftMargin, weaponThumbHight);

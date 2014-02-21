@@ -102,7 +102,7 @@ public class Tank {
         Vector3f fireDirection = tankNode.getWorldRotation().getRotationColumn(2);
         fireDirection.setY(-0.024F);
         try {
-            getActiveWeapon().fire(fireDirection);
+            getActiveWeapon().fire(fireDirection,true); // suppose always left mouse until write right code!
         } catch (Exception e) {
             System.err.println("no activeWeapon found!");
         }

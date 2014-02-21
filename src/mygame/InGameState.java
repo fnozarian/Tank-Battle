@@ -23,11 +23,8 @@ import com.jme3.ui.Picture;
 public class InGameState extends AbstractAppState implements ActionListener {
 
     private SimpleApplication app;
-    private Node rootNode;
     private AssetManager assetManager;
-    private AppStateManager stateManager;
     private InputManager inputManager;
-    private BitmapFont guiFont;
     private Tank tank1;
     private Tank tank2;
     private Tank defaultPlayerTank;//
@@ -37,16 +34,12 @@ public class InGameState extends AbstractAppState implements ActionListener {
     public void initialize(AppStateManager stateManager, Application app) {
         super.initialize(stateManager, app);
         this.app = (SimpleApplication) app;
-        this.rootNode = this.app.getRootNode();
         this.assetManager = this.app.getAssetManager();
-        this.stateManager = this.app.getStateManager();
         this.inputManager = this.app.getInputManager();
-        this.guiFont = this.assetManager.loadFont("Interface/Fonts/Default.fnt");
 
         initWeapon();
         initTank();
         initKeys();
-//        initCrossHairs();
     }
 
     private void initTank() {
@@ -73,7 +66,7 @@ public class InGameState extends AbstractAppState implements ActionListener {
 
     private void initWeapon() {
         //build all weapons 
-        testWeapon = new Weapon(app, 200, new SimpleBulletBuilder(this.app), new FireBehaviourSimple(this.app, rootNode), "Sounds/weapon1.wav");
+        testWeapon = new RocketWeapon(app);
     }
 
     @Override
@@ -83,8 +76,6 @@ public class InGameState extends AbstractAppState implements ActionListener {
     }
 
     //also init gun shape
-    
-
     private void initKeys() {
         inputManager.addMapping("Lefts", new KeyTrigger(KeyInput.KEY_A));
         inputManager.addMapping("Rights", new KeyTrigger(KeyInput.KEY_D));

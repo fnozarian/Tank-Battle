@@ -10,8 +10,8 @@ import com.jme3.scene.Node;
  */
 public class FireBehaviourSimple extends FireBehaviour {
 
-    public FireBehaviourSimple(Application app, Node rootNode) {
-        super(app, rootNode);
+    public FireBehaviourSimple(Application app) {
+        super(app);
     }
 
     @Override

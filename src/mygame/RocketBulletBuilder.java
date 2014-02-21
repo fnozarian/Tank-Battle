@@ -15,9 +15,9 @@ import com.jme3.texture.Texture;
  *
  * @author vahid
  */
-public class SimpleBulletBuilder extends BulletBuilder {
+public class RocketBulletBuilder extends BulletBuilder {
 
-    public SimpleBulletBuilder(Application app) {
+    public RocketBulletBuilder(Application app) {
         super(app);
     }
 

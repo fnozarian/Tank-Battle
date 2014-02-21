@@ -12,8 +12,9 @@ import com.jme3.scene.Mesh;
  * @author vahid & Farzad :D
  */
 public abstract class BulletBuilder {
-    
+
     protected Bullet bullet;
+    //these props 
     protected Mesh mesh;
     protected Material material;
     protected int power;
@@ -26,20 +27,21 @@ public abstract class BulletBuilder {
 
     protected abstract void initPower();
 
-    protected abstract void buildBulletControl(Vector3f direction);
+    protected abstract void buildBulletControl(Vector3f velocityDirection);
 
     public BulletBuilder(Application app) {
         this.app = app;
-       initMesh();
-       initMaterial();
-       initPower();
+        initMesh();
+        initMaterial();
+        initPower();
     }
+
     //All non-shareable thing goes here
     final Bullet buildBullet(Vector3f velocityDirection) {
-        
+
         bullet = new Bullet();
         buildBulletControl(velocityDirection);
-        
+
         //apply bullet properties
         bullet.setGeometry(new Geometry("bullet", mesh));
         bullet.setMaterial(material);

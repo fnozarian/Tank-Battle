@@ -18,7 +18,7 @@ public class GameConfigurations {
     private SimpleApplication app;
     private Properties prop;
     private Properties defaultProp;
-
+    
     private GameConfigurations(Application app) {
         this.app = (SimpleApplication) app;
         setDefaultProps();
@@ -77,7 +77,23 @@ public class GameConfigurations {
         
         defaultProp.setProperty("displayStateView", toString(false));
         defaultProp.setProperty("displayFps", toString(false));
-
+        
+        
+        //Weapons settings
+        ////Rocket
+        defaultProp.setProperty("rocketName", "Rocket");
+        defaultProp.setProperty("rocketThumbPath", "Interface/Weapons/Rocket/Thumb.png");
+        defaultProp.setProperty("rocketCrossHair", "Interface/Weapons/Rocket/CrossHair.png");
+        defaultProp.setProperty("rocketShootShoundPath", "Sounds/Weapons/Rocket/Shoot.wav");
+        defaultProp.setProperty("rocketBulletCount", "5");
+        ////Plasma
+        defaultProp.setProperty("rocketName", "Plasma");
+        defaultProp.setProperty("rocketThumbPath", "Interface/Weapons/Plasma/Thumb.png");
+        defaultProp.setProperty("rocketCrossHair", "Interface/Weapons/Plasma/CrossHair.png");
+        defaultProp.setProperty("rocketShoundPath", "Sounds/Weapons/Plasma/Shoot.wav");
+        defaultProp.setProperty("plasmaBulletCount", "20");
+        
+        
 
     }
 

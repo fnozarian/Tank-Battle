@@ -3,65 +3,54 @@ package mygame;
 import com.jme3.app.Application;
 import com.jme3.app.SimpleApplication;
 import com.jme3.audio.AudioNode;
-import com.jme3.font.BitmapText;
 import com.jme3.math.Vector3f;
-import com.jme3.niftygui.RenderFontJme;
 import com.jme3.scene.Node;
 import com.jme3.ui.Picture;
-import java.util.Hashtable;
-import java.util.Properties;
 
-public class Weapon {
+public abstract class Weapon {
 
-    private GameConfigurations confs;
-    private Node rootNode;
-    private SimpleApplication app;
-    private FireBehaviour fireBehaviour;
-    private BulletBuilder bulletCreator;
-    private int bulletCount;
-    private Node weaponNode;
-    private AudioNode weaponSound;
-    private Picture weaponThumb;
-    private String weaponName;
-    private Picture crossHair;
+    protected GameConfigurations confs;
+    protected Node rootNode;
+    protected SimpleApplication app;
+    protected FireBehaviour fireBehaviourLeft; //for left mouse button
+    protected FireBehaviour fireBehaviourRight;//for right mouse button
+    protected BulletBuilder bulletCreator;
+    protected int bulletCount;
+    protected Node weaponNode;
+    protected AudioNode shootSound;
+    protected Picture weaponThumb;
+    protected String weaponName;
+    protected Picture crossHair;
     
-    public void setFireBehaviour(FireBehaviour fireBehaviour) {
-        this.fireBehaviour = fireBehaviour;
-    }
-
-    public void setBulletCreator(BulletBuilder bulletCreator) {
-        this.bulletCreator = bulletCreator;
-    }
-
-    public Weapon(Application app, int bulletCount, BulletBuilder bulletCreator, FireBehaviour fireBehaviour, String fireSound) {// fireSound should be mono
-        confs = GameConfigurations.getInstance(app);
+    public Weapon(Application app) { // This is Templete Method that shows a skeleton of weapon creation process!
+        this.app = (SimpleApplication) app;
         
-        this.app = (SimpleApplication)app;
-        this.rootNode = this.app.getRootNode();
-        this.bulletCount = bulletCount;
-        this.bulletCreator = bulletCreator;
-        this.fireBehaviour = fireBehaviour;
-        weaponSound = new AudioNode(app.getAssetManager(), fireSound, false);
-        weaponSound.setPositional(true);
-        weaponNode = new Node();
-        weaponNode.attachChild(weaponSound);
-
+        confs = GameConfigurations.getInstance(app);//Singleton Pattern
+        preInitWeapon(); // defer some settings to subclasses, with this we force 
+        bulletCreator = makeBulletBuilder(); // this is Factory Method thath defer instanciation to weapon subclasses
+        
+        postInitWeapon(); // initializing processes that shared among subclasses
     }
+
     /**
-     * 
-     * @param fireDirection Specify the direction of firing 
+     *
+     * @param fireDirection Specify the direction of firing
      */
-    public void fire(Vector3f fireDirection) {
+    public final void fire(Vector3f fireDirection,boolean isLeftFiring) {
         if (bulletCount != 0) {
-            fireBehaviour.fire(weaponNode.getWorldTranslation(), fireDirection, bulletCreator);
+            if(isLeftFiring){
+                fireBehaviourLeft.fire(weaponNode.getWorldTranslation(), fireDirection, bulletCreator);
+            }else{
+                fireBehaviourRight.fire(weaponNode.getWorldTranslation(), fireDirection, bulletCreator);
+            }
             bulletCount--;
-            weaponSound.play();
+            shootSound.play();
         } else {
             noBullet();
         }
     }
 
-    private void noBullet() {
+    protected void noBullet() {
         // play sound of no bullet for example or something else
     }
 
@@ -97,7 +86,16 @@ public class Weapon {
     public Picture getCrossHair() {
         return crossHair;
     }
-    
-    
-}
 
+    protected abstract void preInitWeapon();
+
+    protected abstract BulletBuilder makeBulletBuilder();  //Factory Method!
+    
+    private void postInitWeapon(){
+        
+        this.rootNode = this.app.getRootNode();
+        weaponNode = new Node();
+        weaponNode.attachChild(shootSound);
+        //...
+    }
+}
