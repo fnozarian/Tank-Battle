@@ -14,7 +14,7 @@ public abstract class Weapon {
     protected SimpleApplication app;
     protected FireBehaviour fireBehaviourLeft; //for left mouse button
     protected FireBehaviour fireBehaviourRight;//for right mouse button
-    protected BulletBuilder bulletCreator;
+    protected BulletBuilder bulletBuilder;
     protected int bulletCount;
     protected Node weaponNode;
     protected AudioNode shootSound;
@@ -27,9 +27,14 @@ public abstract class Weapon {
 
         confs = GameConfigurations.getInstance(app);//Singleton Pattern
         preInitWeapon(); // defer some settings to subclasses, with this we force 
-        bulletCreator = makeBulletBuilder(); // this is Factory Method thath defer instanciation to weapon subclasses
+        bulletBuilder = makeBulletBuilder(); // this is Factory Method thath defer instanciation to weapon subclasses
         
         postInitWeapon(); // initializing processes that shared among subclasses
+    }
+    public Weapon(Application app, int bulletCount)
+    {
+        this(app);
+        this.bulletCount = bulletCount;
     }
 
     /**
@@ -39,11 +44,10 @@ public abstract class Weapon {
     public final void fire(Vector3f fireDirection,boolean isLeftFiring) {
         if (bulletCount != 0) {
             if(isLeftFiring){
-                fireBehaviourLeft.fire(weaponNode.getWorldTranslation(), fireDirection, bulletCreator);
+                fireBehaviourLeft.fire(this,weaponNode.getWorldTranslation(), fireDirection, bulletBuilder);
             }else{
-                fireBehaviourRight.fire(weaponNode.getWorldTranslation(), fireDirection, bulletCreator);
+                fireBehaviourRight.fire(this,weaponNode.getWorldTranslation(), fireDirection, bulletBuilder);
             }
-            bulletCount--;
             shootSound.play();
         } else {
             noBullet();
@@ -52,6 +56,7 @@ public abstract class Weapon {
 
     protected void noBullet() {
         // play sound of no bullet for example or something else
+        System.err.println("no bullet");
     }
 
     public int getBulletCount() {
@@ -97,5 +102,9 @@ public abstract class Weapon {
         weaponNode = new Node();
         weaponNode.attachChild(shootSound);
         //...
+    }
+    public void decreaseBulletCount(int number){
+        bulletCount -= number;
+        if (bulletCount<0) bulletCount =0;
     }
 }

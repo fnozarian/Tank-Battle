@@ -9,8 +9,10 @@ import com.jme3.app.SimpleApplication;
 import com.jme3.font.BitmapFont;
 import com.jme3.input.InputManager;
 import com.jme3.input.KeyInput;
+import com.jme3.input.MouseInput;
 import com.jme3.input.controls.ActionListener;
 import com.jme3.input.controls.KeyTrigger;
+import com.jme3.input.controls.MouseButtonTrigger;
 import com.jme3.math.Quaternion;
 import com.jme3.math.Vector3f;
 import com.jme3.scene.Node;
@@ -81,13 +83,15 @@ public class InGameState extends AbstractAppState implements ActionListener {
         inputManager.addMapping("Rights", new KeyTrigger(KeyInput.KEY_D));
         inputManager.addMapping("Ups", new KeyTrigger(KeyInput.KEY_W));
         inputManager.addMapping("Downs", new KeyTrigger(KeyInput.KEY_S));
-        inputManager.addMapping("Space", new KeyTrigger(KeyInput.KEY_SPACE));
+        inputManager.addMapping("leftFire", new KeyTrigger(KeyInput.KEY_O),new MouseButtonTrigger(MouseInput.BUTTON_LEFT));
+        inputManager.addMapping("rightFire", new KeyTrigger(KeyInput.KEY_P),new MouseButtonTrigger(MouseInput.BUTTON_RIGHT));
         inputManager.addMapping("Reset", new KeyTrigger(KeyInput.KEY_RETURN));
         inputManager.addListener(this, "Lefts");
         inputManager.addListener(this, "Rights");
         inputManager.addListener(this, "Ups");
         inputManager.addListener(this, "Downs");
-        inputManager.addListener(this, "Space");
+        inputManager.addListener(this, "leftFire");
+        inputManager.addListener(this, "rightFire");
         inputManager.addListener(this, "Reset");
     }
     protected void setPlayerTank(Tank tank){
@@ -113,9 +117,10 @@ public class InGameState extends AbstractAppState implements ActionListener {
                 defaultPlayerTank.resetTank();
             } else {
             }
-        } else if (name.equals("Space") && isPressed) {
-            defaultPlayerTank.fire();
-
+        } else if (name.equals("leftFire") && isPressed) {
+            defaultPlayerTank.fire(true);
+        }else if (name.equals("rightFire") && isPressed) {
+            defaultPlayerTank.fire(false);
         }
     }
 }
