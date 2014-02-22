@@ -27,9 +27,9 @@ public class RocketWeapon extends Weapon{
         weaponThumb = new Picture(weaponName);
         weaponThumb.setImage(app.getAssetManager(), confs.getProperty("rocketThumbPath").toString(), true);
         crossHair = new Picture(weaponName);
-        crossHair.setImage(app.getAssetManager(), confs.getProperty("rocketCrossHairPath").toString(), true);
+    //    crossHair.setImage(app.getAssetManager(), confs.getProperty("rocketCrossHairPath").toString(), true);
         bulletCount = Integer.parseInt(confs.getProperty("rocketBulletCount").toString());
-        fireBehaviourLeft = new SimpleFireBehaviour(app);
+        fireBehaviourLeft = new TripleFireBehaviour(app);
     }
 
     @Override

@@ -85,13 +85,20 @@ public class GameConfigurations {
         defaultProp.setProperty("rocketThumbPath", "Interface/Weapons/Rocket/Thumb.png");
         defaultProp.setProperty("rocketCrossHair", "Interface/Weapons/Rocket/CrossHair.png");
         defaultProp.setProperty("rocketShootShoundPath", "Sounds/Weapons/Rocket/Shoot.wav");
-        defaultProp.setProperty("rocketBulletCount", "5");
+        defaultProp.setProperty("rocketBulletCount", "500");// I think rocketBulletCount should be set in weapon constructor, not here
         ////Plasma
-        defaultProp.setProperty("rocketName", "Plasma");
+        defaultProp.setProperty("rocketName", "Plasma");//key string sounds wrong . might be PlasmaName same issue in following keys
         defaultProp.setProperty("rocketThumbPath", "Interface/Weapons/Plasma/Thumb.png");
         defaultProp.setProperty("rocketCrossHair", "Interface/Weapons/Plasma/CrossHair.png");
         defaultProp.setProperty("rocketShoundPath", "Sounds/Weapons/Plasma/Shoot.wav");
         defaultProp.setProperty("plasmaBulletCount", "20");
+        
+       
+        //FireBehaviours settings
+        ////SimpleFireBehaviour
+        defaultProp.setProperty("SimpleFireBehaviourBulletsPerFire", "1");
+        ////TripleFireBehaviour
+        defaultProp.setProperty("TripleFireBehaviourBulletsPerFire", "3");
         
         
 

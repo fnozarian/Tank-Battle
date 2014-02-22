@@ -9,11 +9,27 @@ public abstract class FireBehaviour {
 
     protected SimpleApplication app;
     protected Node rootNode;
+    protected int bulletsPerFire;
+    protected GameConfigurations confs;
+    protected Weapon weapon;
+    
 
     public FireBehaviour(Application app) {
         this.app = (SimpleApplication) app;
         this.rootNode = this.app.getRootNode();
+        confs = GameConfigurations.getInstance(app);
+        initBulletsPerFire();
+        
     }
-
-    public abstract void fire(Vector3f location, Vector3f direction, BulletBuilder bulletCreator);
+        private void updateBulletCount(Weapon weapon){
+        weapon.decreaseBulletCount(bulletsPerFire);
+        
+    }
+    final public void fire(Weapon weapon,Vector3f location, Vector3f direction, BulletBuilder bulletCreator){
+        updateBulletCount(weapon);//then decrease bullet count
+        shoot(weapon,location,direction,bulletCreator);// first shoot the bullet
+        
+    }
+    protected abstract void shoot(Weapon weapon,Vector3f location, Vector3f direction, BulletBuilder bulletCreator);
+    protected abstract void initBulletsPerFire();
 }

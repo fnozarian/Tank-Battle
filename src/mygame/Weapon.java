@@ -39,11 +39,10 @@ public abstract class Weapon {
     public final void fire(Vector3f fireDirection,boolean isLeftFiring) {
         if (bulletCount != 0) {
             if(isLeftFiring){
-                fireBehaviourLeft.fire(weaponNode.getWorldTranslation(), fireDirection, bulletCreator);
+                fireBehaviourLeft.fire(this,weaponNode.getWorldTranslation(), fireDirection, bulletCreator);
             }else{
-                fireBehaviourRight.fire(weaponNode.getWorldTranslation(), fireDirection, bulletCreator);
+                fireBehaviourRight.fire(this,weaponNode.getWorldTranslation(), fireDirection, bulletCreator);
             }
-            bulletCount--;
             shootSound.play();
         } else {
             noBullet();
@@ -52,6 +51,7 @@ public abstract class Weapon {
 
     protected void noBullet() {
         // play sound of no bullet for example or something else
+        System.err.println("no bullet");
     }
 
     public int getBulletCount() {
@@ -97,5 +97,9 @@ public abstract class Weapon {
         weaponNode = new Node();
         weaponNode.attachChild(shootSound);
         //...
+    }
+    public void decreaseBulletCount(int number){
+        bulletCount -= number;
+        if (bulletCount<0) bulletCount =0;
     }
 }
