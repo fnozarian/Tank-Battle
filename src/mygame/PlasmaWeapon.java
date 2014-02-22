@@ -25,6 +25,8 @@ public class PlasmaWeapon extends Weapon{
         crossHair = new Picture(weaponName);
         crossHair.setImage(app.getAssetManager(), confs.getProperty("plasmaCrossHairPath").toString(), true);
         bulletCount = Integer.parseInt(confs.getProperty("plasmaBulletCount").toString());
+        fireBehaviourLeft = new SimpleFireBehaviour(app);
+        fireBehaviourRight = new TripleFireBehaviour(app);
     }
 
     @Override

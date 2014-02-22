@@ -89,17 +89,10 @@ public class GameConfigurations {
         ////Plasma
         defaultProp.setProperty("plasmaName", "Plasma");
         defaultProp.setProperty("plasmaThumbPath", "Interface/Weapons/Plasma/Thumb.png");
-        defaultProp.setProperty("plasmaCrossHair", "Interface/Weapons/Plasma/CrossHair.png");
-        defaultProp.setProperty("plasmaShoundPath", "Sounds/Weapons/Plasma/Shoot.wav");
-
-        defaultProp.setProperty("rocketName", "Plasma");//key string sounds wrong . might be PlasmaName same issue in following keys
-        defaultProp.setProperty("rocketThumbPath", "Interface/Weapons/Plasma/Thumb.png");
-        defaultProp.setProperty("rocketCrossHair", "Interface/Weapons/Plasma/CrossHair.png");
-        defaultProp.setProperty("rocketShoundPath", "Sounds/Weapons/Plasma/Shoot.wav");
-
+        defaultProp.setProperty("plasmaCrossHairPath", "Interface/Weapons/Plasma/CrossHair.png");
+        defaultProp.setProperty("plasmaShootShoundPath", "Sounds/Weapons/Rocket/Shoot.wav");        
         defaultProp.setProperty("plasmaBulletCount", "20");
         
-       
         //FireBehaviours settings
         ////SimpleFireBehaviour
         defaultProp.setProperty("SimpleFireBehaviourBulletsPerFire", "1");

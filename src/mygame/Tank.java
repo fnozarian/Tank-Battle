@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import com.jme3.audio.AudioNode;
 import com.jme3.bullet.BulletAppState;
 import com.jme3.bullet.PhysicsSpace;
+import com.jme3.bullet.PhysicsTickListener;
 import com.jme3.bullet.collision.PhysicsCollisionObject;
 import com.jme3.bullet.util.CollisionShapeFactory;
 import com.jme3.math.Quaternion;
@@ -20,7 +21,6 @@ import com.jme3.math.Matrix3f;
 import com.jme3.scene.Spatial;
 
 public class Tank {
-
 
     private final float accelerationForce = 1000.0f;
     private final float brakeForce = 100.0f;
@@ -41,16 +41,16 @@ public class Tank {
     private SimpleApplication app;
     private PhysicsHoverControl vehicleControl;
 
-    public Tank(Application app,Vector3f location,Quaternion direction) {
+    public Tank(Application app, Vector3f location, Quaternion direction) {
 
         this.app = (SimpleApplication) app;
         tankNode = new Node();
-        
+
         tankNode.setLocalTranslation(location);
         tankNode.setLocalRotation(direction);
         //initialize members
         weapons = new ArrayList<Weapon>();
-        int health =100;
+        int health = 100;
 
 
         //Configuring Model
@@ -58,7 +58,7 @@ public class Tank {
         colShape = CollisionShapeFactory.createDynamicMeshShape(tankBody);
         tankBody.setShadowMode(RenderQueue.ShadowMode.CastAndReceive);
         tankBody.setLocalTranslation(new Vector3f(0, 0, 0));///-60, 14, -23
-        
+
         tankNode.attachChild(tankBody);
 
         //Configuring vehicle control
@@ -72,13 +72,14 @@ public class Tank {
         tankNode.attachChild(tankIdleSound);
         tankIdleSound.play();
 
-        
+
         //add Tank to scene
         this.app.getRootNode().attachChild(tankNode);
         getPhysicsSpace().add(tankNode);
 
     }
-    void setAsPlayer(){
+
+    void setAsPlayer() {
         //Configuring camera
         camNode = new CameraNode("camNode", this.app.getCamera());
         //Setting the direction to Spatial to camera, this means the camera will copy the movements of the Node
@@ -101,16 +102,30 @@ public class Tank {
     public void fire(boolean isLeftFiring) {
         Vector3f fireDirection = tankNode.getWorldRotation().getRotationColumn(2);
         fireDirection.setY(-0.024F);
-        try {
-            getActiveWeapon().fire(fireDirection,isLeftFiring);
-        } catch (Exception e) {
-            System.err.println("no activeWeapon found!");
-        }
-        
+        //try {
+            getActiveWeapon().fire(fireDirection, isLeftFiring);
+        //} catch (Exception e) {
+         //   System.err.println("no activeWeapon found!");
+        //}
+
     }
 
-    public void switchWeapon(Weapon weapon) {
-        activeWeapon = getWeapons().get(getWeapons().indexOf(weapon));
+    public void switchWeapon(boolean upward) {
+        int nextWeaponIndex;
+        int activeWeaponIndex = getWeapons().indexOf(activeWeapon);
+        int weaponsSize = getWeapons().size();
+        
+        if (upward) {
+            nextWeaponIndex = (activeWeaponIndex + 1) % weaponsSize;
+        } else {
+            nextWeaponIndex = (activeWeaponIndex -1 == -1) ? weaponsSize -1 :  activeWeaponIndex -1;
+        }
+        
+        System.err.println(weaponsSize);
+        System.err.println(nextWeaponIndex);
+        System.err.println(activeWeaponIndex);
+        System.err.println("****************");
+        activeWeapon = getWeapons().get(nextWeaponIndex);
     }
 
     void decreaseHealth(int point) {
@@ -163,17 +178,18 @@ public class Tank {
 
     public void attachToWorld(Vector3f location, Quaternion direction) {
         //Adding to screen
-       
+
         //tankNode.setLocalRotation(Matrix3f.ZERO);
-        
+
         app.getRootNode().attachChild(tankNode);
         getPhysicsSpace().add(tankNode);
-         
+
     }
 
     private PhysicsSpace getPhysicsSpace() {
         return this.app.getStateManager().getState(BulletAppState.class).getPhysicsSpace();
     }
+
     public void setVehicleControl(PhysicsHoverControl vehicleControl) {
         this.vehicleControl = vehicleControl;
     }
@@ -191,5 +207,12 @@ public class Tank {
     public Weapon getActiveWeapon() {
         return activeWeapon;
     }
-    
+
+    public void prePhysicsTick(PhysicsSpace space, float tpf) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    public void physicsTick(PhysicsSpace space, float tpf) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
 }
