@@ -74,7 +74,7 @@ public class HUDState extends AbstractAppState {
             }
 
             //Draw each weapon thumb
-            weaponThumb = weapon.getWeaponThumb();
+            weaponThumb = weapon.getWeaponThumb(); 
             weaponThumb.setWidth(weaponListTileWidth);
             weaponThumb.setHeight(weaponListTitleHeight);
             weaponThumb.setPosition(leftMargin, weaponThumbHight);

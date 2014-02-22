@@ -6,12 +6,15 @@ import com.jme3.bullet.BulletAppState;
 import com.jme3.bullet.collision.shapes.BoxCollisionShape;
 import com.jme3.bullet.collision.shapes.SphereCollisionShape;
 import com.jme3.material.Material;
+import com.jme3.math.ColorRGBA;
 import com.jme3.math.Vector3f;
+import com.jme3.post.FilterPostProcessor;
+import com.jme3.post.filters.BloomFilter;
 import com.jme3.scene.Mesh;
 import com.jme3.scene.shape.Sphere;
 import com.jme3.scene.shape.Box;
 import com.jme3.texture.Texture;
-
+import com.jme3.scene.shape.Torus;
 /**
  *
  * @author MR Blue
@@ -24,7 +27,8 @@ public class PlasmaBulletBuilder extends BulletBuilder {
 
     @Override
     protected void initMesh() {
-        Box b = new Box(1f, 1f, 1f);//32, 32, 0.2f, true, false
+        Torus b = new Torus(20,20,1f, 2f);//32, 32, 0.2f, true, false
+        
         //Oops!
         mesh = (Mesh) b;
     }
@@ -32,11 +36,14 @@ public class PlasmaBulletBuilder extends BulletBuilder {
     @Override
     protected void initMaterial() {
 
-        material = new Material(app.getAssetManager(),
-                "Common/MatDefs/Misc/Unshaded.j3md");
-        Texture cube1Tex = app.getAssetManager().loadTexture(
-                "Interface/Logo/Monkey.jpg");
-        material.setTexture("ColorMap", cube1Tex);
+        Material mat = new Material(app.getAssetManager(), "Common/MatDefs/Misc/Unshaded.j3md");
+        mat.setColor("Color", ColorRGBA.Green);
+        mat.setColor("GlowColor", ColorRGBA.Green);
+        FilterPostProcessor fpp = new FilterPostProcessor(app.getAssetManager());
+        BloomFilter bloom = new BloomFilter(BloomFilter.GlowMode.Objects);
+        fpp.addFilter(bloom);
+        app.getViewPort().addProcessor(fpp);
+        material = mat;
     }
 
     @Override
@@ -46,8 +53,8 @@ public class PlasmaBulletBuilder extends BulletBuilder {
 
     @Override
     protected void buildBulletControl(Vector3f velocityDirection) {
-        BoxCollisionShape bulletCollisionShape = new BoxCollisionShape(new Vector3f(1,1,1));
-        bulletControl = new BombControl(app.getAssetManager(), bulletCollisionShape, 10f);
+        BoxCollisionShape bulletCollisionShape = new BoxCollisionShape(new Vector3f(1, 1, 1));
+        bulletControl = new BombControl(app.getAssetManager(), bulletCollisionShape, 20f);
         bulletControl.setLinearVelocity((velocityDirection).mult(350));
         app.getStateManager().getState(BulletAppState.class).getPhysicsSpace().add(bulletControl);
     }

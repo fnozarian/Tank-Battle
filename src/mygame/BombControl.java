@@ -59,7 +59,7 @@ import java.util.Iterator;
  */
 public class BombControl extends RigidBodyControl implements PhysicsCollisionListener, PhysicsTickListener {
 
-    private float explosionRadius = 10;
+    private float explosionRadius = 5;
     private PhysicsGhostObject ghostObject;
     private Vector3f vector = new Vector3f();
     private Vector3f vector2 = new Vector3f();

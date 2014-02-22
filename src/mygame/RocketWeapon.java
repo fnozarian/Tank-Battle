@@ -15,7 +15,6 @@ public class RocketWeapon extends Weapon{
     
     public RocketWeapon(Application app) {
         super(app);
-        
     }
 
     @Override
