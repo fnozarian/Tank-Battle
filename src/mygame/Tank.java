@@ -98,11 +98,11 @@ public class Tank {
         vehicleControl.steer(value);
     }
 
-    public void fire() {
+    public void fire(boolean isLeftFiring) {
         Vector3f fireDirection = tankNode.getWorldRotation().getRotationColumn(2);
         fireDirection.setY(-0.024F);
         try {
-            getActiveWeapon().fire(fireDirection,true); // suppose always left mouse until write right code!
+            getActiveWeapon().fire(fireDirection,isLeftFiring);
         } catch (Exception e) {
             System.err.println("no activeWeapon found!");
         }
