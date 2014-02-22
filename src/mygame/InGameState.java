@@ -29,8 +29,6 @@ import com.jme3.ui.Picture;
 public class InGameState extends AbstractAppState implements ActionListener, AnalogListener {
 
     private SimpleApplication app;
-    private AssetManager assetManager;
-    private InputManager inputManager;
     private Tank tank1;
     private Tank tank2;
     private Tank defaultPlayerTank;//
@@ -39,8 +37,6 @@ public class InGameState extends AbstractAppState implements ActionListener, Ana
     public void initialize(AppStateManager stateManager, Application app) {
         super.initialize(stateManager, app);
         this.app = (SimpleApplication) app;
-        this.assetManager = this.app.getAssetManager();
-        this.inputManager = this.app.getInputManager();
 
         initTank();
         initWeapon();
@@ -53,12 +49,8 @@ public class InGameState extends AbstractAppState implements ActionListener, Ana
         tank1 = new Tank(this.app, new Vector3f(0, 0, 0), new Quaternion(new float[]{0, 0.01f, 0}));
         tank2 = new Tank(this.app, new Vector3f(0, 0, 40), new Quaternion(new float[]{0, 1.5f, 0}));
 
-        tank1.setAsPlayer();
-        tank1.attachToWorld(new Vector3f(200, 200, 200), new Quaternion(new float[]{0, 0.01f, 0}));
-        //add necessary weapons to tank
-
         //set default tank for player
-        setPlayerTank(tank1);// in order to take care of camera, keys, etc 
+        setPlayerTank(tank2);// in order to take care of camera, keys, etc 
     }
 
     private void initWeapon() {
@@ -75,24 +67,24 @@ public class InGameState extends AbstractAppState implements ActionListener, Ana
 
     //also init gun shape
     private void initKeys() {
-        inputManager.addMapping("Lefts", new KeyTrigger(KeyInput.KEY_A));
-        inputManager.addMapping("Rights", new KeyTrigger(KeyInput.KEY_D));
-        inputManager.addMapping("Ups", new KeyTrigger(KeyInput.KEY_W));
-        inputManager.addMapping("Downs", new KeyTrigger(KeyInput.KEY_S));
-        inputManager.addMapping("leftFire", new KeyTrigger(KeyInput.KEY_O), new MouseButtonTrigger(MouseInput.BUTTON_LEFT));
-        inputManager.addMapping("rightFire", new KeyTrigger(KeyInput.KEY_P), new MouseButtonTrigger(MouseInput.BUTTON_RIGHT));
-        inputManager.addMapping("WheelUp", new MouseAxisTrigger(MouseInput.AXIS_WHEEL, false));
-        inputManager.addMapping("WheelDown", new MouseAxisTrigger(MouseInput.AXIS_WHEEL, true));
-        inputManager.addMapping("Reset", new KeyTrigger(KeyInput.KEY_RETURN));
-        inputManager.addListener(this, "Lefts");
-        inputManager.addListener(this, "Rights");
-        inputManager.addListener(this, "Ups");
-        inputManager.addListener(this, "Downs");
-        inputManager.addListener(this, "leftFire");
-        inputManager.addListener(this, "rightFire");
-        inputManager.addListener(this, "WheelUp");
-        inputManager.addListener(this, "WheelDown");
-        inputManager.addListener(this, "Reset");
+        app.getInputManager().addMapping("Lefts", new KeyTrigger(KeyInput.KEY_A));
+        app.getInputManager().addMapping("Rights", new KeyTrigger(KeyInput.KEY_D));
+        app.getInputManager().addMapping("Ups", new KeyTrigger(KeyInput.KEY_W));
+        app.getInputManager().addMapping("Downs", new KeyTrigger(KeyInput.KEY_S));
+        app.getInputManager().addMapping("leftFire", new KeyTrigger(KeyInput.KEY_O), new MouseButtonTrigger(MouseInput.BUTTON_LEFT));
+        app.getInputManager().addMapping("rightFire", new KeyTrigger(KeyInput.KEY_P), new MouseButtonTrigger(MouseInput.BUTTON_RIGHT));
+        app.getInputManager().addMapping("WheelUp", new MouseAxisTrigger(MouseInput.AXIS_WHEEL, false));
+        app.getInputManager().addMapping("WheelDown", new MouseAxisTrigger(MouseInput.AXIS_WHEEL, true));
+        app.getInputManager().addMapping("Reset", new KeyTrigger(KeyInput.KEY_RETURN));
+        app.getInputManager().addListener(this, "Lefts");
+        app.getInputManager().addListener(this, "Rights");
+        app.getInputManager().addListener(this, "Ups");
+        app.getInputManager().addListener(this, "Downs");
+        app.getInputManager().addListener(this, "leftFire");
+        app.getInputManager().addListener(this, "rightFire");
+        app.getInputManager().addListener(this, "WheelUp");
+        app.getInputManager().addListener(this, "WheelDown");
+        app.getInputManager().addListener(this, "Reset");
     }
 
     protected void setPlayerTank(Tank tank) {
