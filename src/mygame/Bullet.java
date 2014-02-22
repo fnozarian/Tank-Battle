@@ -4,6 +4,7 @@ import com.jme3.bullet.control.RigidBodyControl;
 import com.jme3.material.Material;
 import com.jme3.math.Vector3f;
 import com.jme3.scene.Geometry;
+import com.jme3.scene.Node;
 
 /**
  *
@@ -26,6 +27,7 @@ public class Bullet {
 
     public void setPower(int power) {
         this.power = power;
+        geometry.setUserData("power", power);
     }
 
     public void setMaterial(Material material) {

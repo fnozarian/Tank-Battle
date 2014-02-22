@@ -31,8 +31,11 @@
  */
 package mygame;
 
+import com.bulletphysics.dynamics.RigidBody;
 import com.jme3.bullet.PhysicsSpace;
 import com.jme3.bullet.PhysicsTickListener;
+import com.jme3.bullet.collision.PhysicsCollisionEvent;
+import com.jme3.bullet.collision.PhysicsCollisionListener;
 import com.jme3.bullet.collision.shapes.CollisionShape;
 import com.jme3.bullet.control.PhysicsControl;
 import com.jme3.bullet.objects.PhysicsVehicle;
@@ -48,14 +51,16 @@ import com.jme3.scene.Spatial;
 import com.jme3.scene.control.Control;
 import java.io.IOException;
 
+
 /**
  * PhysicsHoverControl uses a RayCast Vehicle with "slippery wheels" to simulate a hovering tank
  * @author normenhansen
  */
-public class PhysicsHoverControl extends PhysicsVehicle implements PhysicsControl, PhysicsTickListener {
+public class PhysicsHoverControl extends PhysicsVehicle implements PhysicsControl, PhysicsTickListener,PhysicsCollisionListener {
 
     protected Spatial spatial;
-    protected boolean enabled = true;
+    protected boolean enabled = true; 
+ 
     protected PhysicsSpace space = null;
     protected float steeringValue = 0;
     protected float accelerationValue = 0;
@@ -78,6 +83,8 @@ public class PhysicsHoverControl extends PhysicsVehicle implements PhysicsContro
 //    protected float multiplier = 1000f;
 
     public PhysicsHoverControl() {
+        
+        
     }
 
     /**
@@ -226,6 +233,21 @@ public class PhysicsHoverControl extends PhysicsVehicle implements PhysicsContro
     @Override
     public void accelerate(float accelerationValue) {
         this.accelerationValue = accelerationValue * getMass();
+    }
+
+    public void collision(PhysicsCollisionEvent event) {
+        
+       // System.out.println(event.getNodeB().getName());
+    //    System.out.println(event.getNodeA().getName());
+        
+       // if (event.getNodeB().getName() == "Tank"){
+      //      Tank t =(Tank) event.getNodeB().getUserData("tankClass");
+        //    int p = event.getNodeA().getUserData("power");
+        //    t.decreaseHealth(p);
+        //    System.out.println(t.getHealth());
+     //   }
+        
+        
     }
 
 }

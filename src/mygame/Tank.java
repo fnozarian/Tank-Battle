@@ -19,7 +19,7 @@ import com.jme3.bullet.control.RigidBodyControl;
 import com.jme3.math.Matrix3f;
 import com.jme3.scene.Spatial;
 
-public class Tank {
+public class Tank extends Node{
 
 
     private final float accelerationForce = 1000.0f;
@@ -45,6 +45,8 @@ public class Tank {
 
         this.app = (SimpleApplication) app;
         tankNode = new Node();
+        tankNode.setName("Tank");
+        
         
         tankNode.setLocalTranslation(location);
         tankNode.setLocalRotation(direction);
@@ -55,7 +57,9 @@ public class Tank {
 
         //Configuring Model
         tankBody = this.app.getAssetManager().loadModel("Models/HoverTank/Tank2.mesh.xml");
+        
         colShape = CollisionShapeFactory.createDynamicMeshShape(tankBody);
+        
         tankBody.setShadowMode(RenderQueue.ShadowMode.CastAndReceive);
         tankBody.setLocalTranslation(new Vector3f(0, 0, 0));///-60, 14, -23
         
@@ -63,6 +67,7 @@ public class Tank {
 
         //Configuring vehicle control
         vehicleControl = new PhysicsHoverControl(colShape, 500);
+        
         vehicleControl.setCollisionGroup(PhysicsCollisionObject.COLLISION_GROUP_02);
         tankNode.addControl(vehicleControl);
 
@@ -73,9 +78,15 @@ public class Tank {
         tankIdleSound.play();
 
         
+        //attach tank to tankNode
+
+        
         //add Tank to scene
+        
         this.app.getRootNode().attachChild(tankNode);
         getPhysicsSpace().add(tankNode);
+        getPhysicsSpace().addCollisionListener(vehicleControl);
+        
 
     }
     void setAsPlayer(){
