@@ -20,7 +20,7 @@ import com.jme3.bullet.control.RigidBodyControl;
 import com.jme3.math.Matrix3f;
 import com.jme3.scene.Spatial;
 
-public class Tank {
+public class Tank extends Node{
 
     private final float accelerationForce = 1000.0f;
     private final float brakeForce = 100.0f;
@@ -45,12 +45,12 @@ public class Tank {
 
         this.app = (SimpleApplication) app;
         tankNode = new Node();
-
+        tankNode.setName("Tank");
         tankNode.setLocalTranslation(location);
         tankNode.setLocalRotation(direction);
         //initialize members
         weapons = new ArrayList<Weapon>();
-        int health = 100;
+        health = 100;
 
 
         //Configuring Model
@@ -76,7 +76,8 @@ public class Tank {
         //add Tank to scene
         this.app.getRootNode().attachChild(tankNode);
         getPhysicsSpace().add(tankNode);
-
+        getPhysicsSpace().addCollisionListener(vehicleControl);
+        
     }
 
     void setAsPlayer() {
