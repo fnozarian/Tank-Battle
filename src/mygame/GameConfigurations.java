@@ -85,13 +85,13 @@ public class GameConfigurations {
         defaultProp.setProperty("rocketThumbPath", "Interface/Weapons/Rocket/Thumb.png");
         defaultProp.setProperty("rocketCrossHairPath", "Interface/Weapons/Rocket/CrossHair.png");
         defaultProp.setProperty("rocketShootShoundPath", "Sounds/Weapons/Rocket/Shoot.wav");
-        defaultProp.setProperty("rocketBulletCount", "20");
+        defaultProp.setProperty("rocketBulletCount", "200");
         ////Plasma
         defaultProp.setProperty("plasmaName", "Plasma");
         defaultProp.setProperty("plasmaThumbPath", "Interface/Weapons/Plasma/Thumb.png");
         defaultProp.setProperty("plasmaCrossHairPath", "Interface/Weapons/Plasma/CrossHair.png");
         defaultProp.setProperty("plasmaShootShoundPath", "Sounds/Weapons/Rocket/Shoot.wav");        
-        defaultProp.setProperty("plasmaBulletCount", "20");
+        defaultProp.setProperty("plasmaBulletCount", "200");
         
         //FireBehaviours settings
         ////SimpleFireBehaviour

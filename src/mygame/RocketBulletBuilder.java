@@ -40,7 +40,7 @@ public class RocketBulletBuilder extends BulletBuilder {
 
     @Override
     protected void initPower() {
-        power = 1;
+        power = 3;
     }
 
     /**

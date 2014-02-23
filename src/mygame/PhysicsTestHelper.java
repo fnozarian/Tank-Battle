@@ -51,6 +51,7 @@ import com.jme3.scene.shape.Box;
 import com.jme3.scene.shape.Sphere;
 import com.jme3.scene.shape.Sphere.TextureMode;
 import com.jme3.texture.Texture;
+import com.jme3.texture.Texture.WrapMode;
 
 /**
  *
@@ -70,11 +71,16 @@ public class PhysicsTestHelper {
         rootNode.addLight(light);
 
         Material material = new Material(assetManager, "Common/MatDefs/Misc/Unshaded.j3md");
-        material.setTexture("ColorMap", assetManager.loadTexture("Interface/Logo/Monkey.jpg"));
+        Texture floortexture = assetManager.loadTexture("Textures/amirkabir.gif.jpg");
+        floortexture.setWrap(WrapMode.Repeat);
+        material.setTexture("ColorMap", floortexture);
+       
+      
 
         Box floorBox = new Box(140, 0.25f, 140);
         Geometry floorGeometry = new Geometry("Floor", floorBox);
         floorGeometry.setMaterial(material);
+        
         floorGeometry.setLocalTranslation(0, -5, 0);
 //        Plane plane = new Plane();
 //        plane.setOriginNormal(new Vector3f(0, 0.25f, 0), Vector3f.UNIT_Y);

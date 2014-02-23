@@ -1,19 +1,14 @@
 package mygame;
 
 import com.jme3.app.Application;
-import com.jme3.asset.TextureKey;
 import com.jme3.bullet.BulletAppState;
 import com.jme3.bullet.collision.shapes.BoxCollisionShape;
-import com.jme3.bullet.collision.shapes.SphereCollisionShape;
 import com.jme3.material.Material;
 import com.jme3.math.ColorRGBA;
 import com.jme3.math.Vector3f;
 import com.jme3.post.FilterPostProcessor;
 import com.jme3.post.filters.BloomFilter;
 import com.jme3.scene.Mesh;
-import com.jme3.scene.shape.Sphere;
-import com.jme3.scene.shape.Box;
-import com.jme3.texture.Texture;
 import com.jme3.scene.shape.Torus;
 /**
  *
@@ -48,7 +43,7 @@ public class PlasmaBulletBuilder extends BulletBuilder {
 
     @Override
     protected void initPower() {
-        power = 2;
+        power = 5;
     }
 
     @Override
