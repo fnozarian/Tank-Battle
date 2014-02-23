@@ -18,12 +18,15 @@ import com.jme3.bullet.collision.shapes.CollisionShape;
 import com.jme3.math.Matrix3f;
 import com.jme3.scene.Spatial;
 
-public class Tank extends Node {
+public class Tank extends Node implements Observable {
 
+    private boolean changed = false;
+    private ArrayList<Observer> observers;
+    
     private final float mass = 500;
-    private ArrayList<Weapon> weapons;
-    private Weapon activeWeapon;
-    private int health;
+    private ArrayList<Weapon> weapons; //Observable !
+    private Weapon activeWeapon; //Observable !
+    private int health; //Observable !
     private CollisionShape colShape;
     private AudioNode tankIdleSound;
     private Spatial tankBody;
@@ -34,6 +37,7 @@ public class Tank extends Node {
     public Tank(Application app, Vector3f location, Quaternion direction) {
 
         this.app = (SimpleApplication) app;
+        observers = new ArrayList<Observer>();
         setName("Tank");
         setLocalTranslation(location);
         setLocalRotation(direction);
@@ -58,8 +62,8 @@ public class Tank extends Node {
         tankIdleSound = new AudioNode(this.app.getAssetManager(), "Sounds/propeller-plane-idle.wav", false);
         tankIdleSound.setLooping(true);
         attachChild(tankIdleSound);
-        tankIdleSound.play();
-        
+        //tankIdleSound.play();
+
         this.app.getRootNode().attachChild(this);
         getPhysicsSpace().add(this);
         getPhysicsSpace().addCollisionListener(vehicleControl);
@@ -89,30 +93,40 @@ public class Tank extends Node {
         Vector3f fireDirection = getWorldRotation().getRotationColumn(2);
         fireDirection.setY(-0.024F);
         try {
-        getActiveWeapon().fire(fireDirection, isLeftFiring);
-       } catch (Exception e) {
-           System.err.println("no activeWeapon found!");
+            getActiveWeapon().fire(fireDirection, isLeftFiring);
+        } catch (Exception e) {
+            System.err.println("no activeWeapon found!");
         }
 
     }
 
-    public void switchWeapon(boolean upward) {
+    public void switchWeapon(boolean upward) { //Observable Method
         int nextWeaponIndex;
-        int activeWeaponIndex = getWeapons().indexOf(activeWeapon);
-        int weaponsSize = getWeapons().size();
-
+        int activeWeaponIndex = weapons.indexOf(activeWeapon);
+        int weaponsSize = weapons.size();
+        if (activeWeaponIndex == -1) {//this means there is no weapon in weapon list
+            System.err.println("There is No Weapon in Weapon List");
+            return;
+        }
         if (upward) {
             nextWeaponIndex = (activeWeaponIndex + 1) % weaponsSize;
         } else {
             nextWeaponIndex = (activeWeaponIndex - 1 == -1) ? weaponsSize - 1 : activeWeaponIndex - 1;
         }
-        activeWeapon = getWeapons().get(nextWeaponIndex);
+        activeWeapon = weapons.get(nextWeaponIndex);
+        setChanged();
+        notifyObserver(activeWeapon);
     }
 
-    void decreaseHealth(int point) {
+    void decreaseHealth(int point) { //Observer Method
+
+        setChanged();
+        notifyObserver(health);
     }
 
     void increaseHealth(int point) {
+        setChanged();
+        notifyObserver(health);
     }
 
     /**
@@ -124,33 +138,44 @@ public class Tank extends Node {
         vehicleControl.clearForces();
     }
 
-    public void addWeapon(Weapon weapon) {
+    public void addWeapon(Weapon weapon) { //Note! This method is observable!
         //add weapon to tank
-        getWeapons().add(weapon);
+        weapons.add(weapon);
         attachChild(weapon.getWeaponNode());
         //handle activeWeapon
-        if (getWeapons().size() == 1) {
+        if (weapons.size() == 1) {
             activeWeapon = weapon;
+            setChanged();
+            notifyObserver(activeWeapon);
         }
         //set translation of weapon related to tank
         weapon.getWeaponNode().setLocalTranslation((new Vector3f(0, 2f, 8f)));
-        //do something in game e.g show a gun in w
+
+        setChanged();
+        notifyObserver(weapons.toArray());
+
     }
 
     public void removeWeapon(Weapon weapon) {
         //handle activeWeapon
         if (getActiveWeapon().equals(weapon)) {
-            if (getWeapons().size() == 1) {
+            if (weapons.size() == 1) {
                 activeWeapon = null;
             } else {
-                activeWeapon = getWeapons().get(0);
+                activeWeapon = weapons.get(0);
             }
+            setChanged();
+            notifyObserver(activeWeapon);
         }
         //remove weapon from tank
-        getWeapons().remove(weapon);
+        weapons.remove(weapon);
         detachChild(weapon.getWeaponNode());
+        
+        setChanged();
+        notifyObserver(weapons.toArray());
 
     }
+
     private PhysicsSpace getPhysicsSpace() {
         return this.app.getStateManager().getState(BulletAppState.class).getPhysicsSpace();
     }
@@ -171,5 +196,62 @@ public class Tank extends Node {
      */
     public Weapon getActiveWeapon() {
         return activeWeapon;
+    }
+
+    public synchronized void registerObserver(Observer o) {
+        if (o == null) {
+            throw new NullPointerException();
+        }
+        if (!observers.contains(o)) {
+            observers.add(o);
+        }
+    }
+
+    public synchronized void removeObserver(Observer o) {
+        observers.remove(o);
+    }
+
+    public synchronized void setChanged() {
+        changed = true;
+    }
+
+    public synchronized void clearChanged() {
+        changed = false;
+    }
+
+    public synchronized boolean hasChanged() {
+        return changed;
+    }
+
+    public void notifyObserver(Object arg) {
+        /*
+         * a temporary array buffer, used as a snapshot of the state of
+         * current Observers.
+         */
+        Object[] arrLocal;
+
+        synchronized (this) {
+            /* We don't want the Observer doing callbacks into
+             * arbitrary code while holding its own Monitor.
+             * The code where we extract each Observable from
+             * the Vector and store the state of the Observer
+             * needs synchronization, but notifying observers
+             * does not (should not).  The worst result of any
+             * potential race-condition here is that:
+             * 1) a newly-added Observer will miss a
+             *   notification in progress
+             * 2) a recently unregistered Observer will be
+             *   wrongly notified when it doesn't care
+             */
+            if (!changed) {
+                return;
+            }
+            arrLocal = observers.toArray();
+            clearChanged();
+        }
+
+        for (int i = arrLocal.length - 1; i >= 0; i--) {
+            ((Observer) arrLocal[i]).update(this, arg);
+        }
     }
 }

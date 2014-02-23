@@ -20,8 +20,13 @@ public class PlasmaWeapon extends Weapon{
         weaponName =  confs.getProperty("plasmaName").toString();
         shootSound = new AudioNode(app.getAssetManager(),confs.getProperty("plasmaShootShoundPath").toString(), false);
         shootSound.setPositional(true);
+        
         weaponThumb = new Picture(weaponName);
         weaponThumb.setImage(app.getAssetManager(), confs.getProperty("plasmaThumbPath").toString(), true);
+        
+        weaponActiveThumb = new Picture("Active "+weaponName);
+        weaponActiveThumb.setImage(app.getAssetManager(), confs.getProperty("plasmaActiveThumbPath").toString(), true);
+        
         crossHair = new Picture(weaponName);
         crossHair.setImage(app.getAssetManager(), confs.getProperty("plasmaCrossHairPath").toString(), true);
         bulletCount = Integer.parseInt(confs.getProperty("plasmaBulletCount").toString());

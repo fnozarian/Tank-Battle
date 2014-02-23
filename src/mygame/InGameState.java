@@ -32,25 +32,32 @@ public class InGameState extends AbstractAppState implements ActionListener, Ana
     private Tank tank1;
     private Tank tank2;
     private Tank defaultPlayerTank;//
-
+    private AbstractAppState hudState;
     @Override
     public void initialize(AppStateManager stateManager, Application app) {
         super.initialize(stateManager, app);
         this.app = (SimpleApplication) app;
 
+        hudState = new HUDState();
+        stateManager.attach(hudState);
+        
         initTank();
         initWeapon();
         initKeys();
+
+        tank1.registerObserver((Observer)hudState);
+        
+        
+        
+        
     }
 
     private void initTank() {
         //build the tank
-        //build tank(S)
         tank1 = new Tank(this.app, new Vector3f(0, 0, 0), new Quaternion(new float[]{0, 0.01f, 0}));
         tank2 = new Tank(this.app, new Vector3f(0, 0, 40), new Quaternion(new float[]{0, 1.5f, 0}));
-
         //set default tank for player
-        setPlayerTank(tank2);// in order to take care of camera, keys, etc 
+        setPlayerTank(tank1);// in order to take care of camera, keys, etc 
     }
 
     private void initWeapon() {

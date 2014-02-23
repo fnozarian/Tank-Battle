@@ -36,9 +36,12 @@ public class Main extends SimpleApplication {
         bulletAppState = new BulletAppState();
         bulletAppState.setThreadingType(BulletAppState.ThreadingType.PARALLEL);
         inGameState = new InGameState();
+        
         stateManager.attach(bulletAppState);
         PhysicsTestHelper.createPhysicsTestWorld(rootNode, assetManager, bulletAppState.getPhysicsSpace());
         stateManager.attach(inGameState);
+        
+        
     }
 
     @Override
