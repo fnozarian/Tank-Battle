@@ -9,24 +9,27 @@ import com.jme3.ui.Picture;
  *
  * @author MR Blue
  */
-public class RocketWeapon extends Weapon{
-    
-    
-    
+public class RocketWeapon extends Weapon {
+
     public RocketWeapon(Application app) {
         super(app);
     }
 
     @Override
     protected void preInitWeapon() {//can encapsulate this in a config class and use factory method pattern !
-        
-        weaponName =  confs.getProperty("rocketName").toString();
-        shootSound = new AudioNode(app.getAssetManager(),confs.getProperty("rocketShootShoundPath").toString(), false);
+
+        weaponName = confs.getProperty("rocketName").toString();
+        shootSound = new AudioNode(app.getAssetManager(), confs.getProperty("rocketShootShoundPath").toString(), false);
         shootSound.setPositional(true);
+        
         weaponThumb = new Picture(weaponName);
         weaponThumb.setImage(app.getAssetManager(), confs.getProperty("rocketThumbPath").toString(), true);
+        
+        weaponActiveThumb = new Picture("Active "+weaponName);
+        weaponActiveThumb.setImage(app.getAssetManager(), confs.getProperty("rocketActiveThumbPath").toString(), true);
+        
         crossHair = new Picture(weaponName);
-    //    crossHair.setImage(app.getAssetManager(), confs.getProperty("rocketCrossHairPath").toString(), true);
+        crossHair.setImage(app.getAssetManager(), confs.getProperty("rocketCrossHairPath").toString(), true);
         bulletCount = Integer.parseInt(confs.getProperty("rocketBulletCount").toString());
         fireBehaviourLeft = new SimpleFireBehaviour(app);
         fireBehaviourRight = new TripleFireBehaviour(app);
@@ -36,5 +39,4 @@ public class RocketWeapon extends Weapon{
     protected BulletBuilder makeBulletBuilder() {
         return new RocketBulletBuilder(app);
     }
-
 }

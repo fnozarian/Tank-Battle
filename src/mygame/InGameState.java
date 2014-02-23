@@ -50,6 +50,7 @@ public class InGameState extends AbstractAppState implements ActionListener, Ana
     private CameraNode camNode;
     
 
+    private AbstractAppState hudState;
     @Override
     public void initialize(AppStateManager stateManager, Application app) {
         super.initialize(stateManager, app);
@@ -58,12 +59,18 @@ public class InGameState extends AbstractAppState implements ActionListener, Ana
         this.app.getAssetManager(),"Textures/Sky/Bright/BrightSky.dds", false));
         
 
+        hudState = new HUDState();
+        stateManager.attach(hudState);
+        
         initTank();
         initWeapon();
         initKeys();
         initSun();
         initSound();
         initmotionCamera();
+
+        tank1.registerObserver((Observer)hudState);
+
         
     }
 

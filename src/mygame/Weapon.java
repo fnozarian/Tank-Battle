@@ -6,6 +6,8 @@ import com.jme3.audio.AudioNode;
 import com.jme3.math.Vector3f;
 import com.jme3.scene.Node;
 import com.jme3.ui.Picture;
+import java.util.Observable;
+import java.util.Observer;
 
 public abstract class Weapon {
 
@@ -19,6 +21,7 @@ public abstract class Weapon {
     protected Node weaponNode;
     protected AudioNode shootSound;
     protected Picture weaponThumb;
+    protected Picture weaponActiveThumb;
     protected String weaponName;
     protected Picture crossHair;
     
@@ -74,8 +77,8 @@ public abstract class Weapon {
     /**
      * @return the weaponThumb
      */
-    public Picture getWeaponThumb() {
-        return weaponThumb;
+    public Picture getWeaponThumb(boolean isActive){
+        return isActive ? weaponActiveThumb : weaponThumb;
     }
 
     /**

@@ -48,7 +48,7 @@ public class GameConfigurations {
         float crossHairHeight = screenHeight / 20;
         float leftMargin = (float) (screenWidth * 0.008);
         float topMargin = (float) (screenHeight * 0.9);
-        float weaponVerticalAlignmentSize = (float) (screenWidth * 0.05);
+        float weaponVerticalAlignmentSize = (float) (screenWidth * 0.1);//(screenWidth * 0.05)
         float textVerticalAlignmentSize = (float) (weaponVerticalAlignmentSize * 0.01);
         float weaponHorizontalAlignmentSize = (float) (screenHeight * 0.05);
         float textHorizontalAlignmentSize = (float) (screenWidth * 0.02);
@@ -83,11 +83,13 @@ public class GameConfigurations {
         ////Rocket
         defaultProp.setProperty("rocketName", "Rocket");
         defaultProp.setProperty("rocketThumbPath", "Interface/Weapons/Rocket/Thumb.png");
+        defaultProp.setProperty("rocketActiveThumbPath", "Interface/Weapons/Rocket/ActiveThumb.png");
         defaultProp.setProperty("rocketCrossHairPath", "Interface/Weapons/Rocket/CrossHair.png");
         defaultProp.setProperty("rocketShootShoundPath", "Sounds/Weapons/Rocket/Shoot.wav");
         defaultProp.setProperty("rocketBulletCount", "200");
         ////Plasma
         defaultProp.setProperty("plasmaName", "Plasma");
+        defaultProp.setProperty("plasmaActiveThumbPath", "Interface/Weapons/Plasma/ActiveThumb.png");
         defaultProp.setProperty("plasmaThumbPath", "Interface/Weapons/Plasma/Thumb.png");
         defaultProp.setProperty("plasmaCrossHairPath", "Interface/Weapons/Plasma/CrossHair.png");
         defaultProp.setProperty("plasmaShootShoundPath", "Sounds/Weapons/Rocket/Shoot.wav");        
