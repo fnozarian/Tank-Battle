@@ -66,7 +66,6 @@ public class InGameState extends AbstractAppState implements ActionListener, Ana
         initWeapon();
         initKeys();
         initSun();
-        initSound();
         initmotionCamera();
 
         tank1.registerObserver((Observer)hudState);
@@ -174,7 +173,7 @@ public class InGameState extends AbstractAppState implements ActionListener, Ana
          path = new MotionPath();
         //path.setCycle(true);
         //path.addWayPoint(new Vector3f(20, 150, 0));
-        path.addWayPoint(new Vector3f(0, 150, -20));
+        path.addWayPoint(new Vector3f(0, 130, -20));
         path.addWayPoint(new Vector3f(20, 100, 0));
         path.addWayPoint(new Vector3f(0, 40, 20));
         path.addWayPoint(new Vector3f(-20, 30, 0));
@@ -228,12 +227,4 @@ sun.setDirection(new Vector3f(-.5f,-.5f,-.5f).normalizeLocal());
 this.app.getRootNode().addLight(sun);
     }
 
-    private void initSound() {
-     AudioNode  audio_nature = new AudioNode(this.app.getAssetManager(), "Sounds/bienvenida (1).mp3", true);
-    audio_nature.setLooping(true);  // activate continuous playing
-    audio_nature.setPositional(true);   
-    audio_nature.setVolume(3);
-    this.app.getRootNode().attachChild(audio_nature);
-    audio_nature.play(); // play continuously!
-    }
 }

@@ -6,8 +6,6 @@ import com.jme3.audio.AudioNode;
 import com.jme3.math.Vector3f;
 import com.jme3.scene.Node;
 import com.jme3.ui.Picture;
-import java.util.Observable;
-import java.util.Observer;
 
 public abstract class Weapon {
 
